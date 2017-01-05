@@ -1,5 +1,5 @@
 
-#a::
+^a::
 ; Init all enviroment variables
 minHPRate := 0.8
 minMPRate := 0.2
@@ -22,7 +22,7 @@ ImageSearch, fullMpX, fullMpY,960,500,A_ScreenWidth,A_ScreenHeight, *80 resource
 mpCoverRangeX := fullMpX + 123 * (1-minMPRate)
 return
 
-#s::
+^s::
 ;Fix tap to Right to self
 ControlSend,,{esc}{tab}{home}{Right}{tab}, target
 SetTimer, move, 50
@@ -32,11 +32,11 @@ SetTimer, giveHealToSelf, 500
 SetTimer, giveManaToSelf, 500
 return
 
-#q::
+^q::
 gosub, workDamageUp
 return
 
-#d::
+^d::
 SetTimer, move, off
 SetTimer, giveHealToTarget, off
 SetTimer, giveDoubleHealToTarget, off
@@ -45,7 +45,7 @@ SetTimer, giveManaToSelf, off
 
 return
 
-#z::
+^z::
 movePotal()
 return
 
