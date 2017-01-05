@@ -1,9 +1,9 @@
 ﻿#t::
-WinSetTitle, 바람의나라, , target
+WinSetTitle,바람의나라,,target
 return
 
 #s::
-WinSetTitle, 바람의나라, , self
+WinSetTitle,바람의나라,,self
 return
 
 #w::
