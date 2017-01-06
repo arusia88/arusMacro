@@ -1,11 +1,11 @@
-﻿^t::
+﻿#q::
 WinSetTitle,바람의나라,,target
 return
 
-^s::
+#w::
 WinSetTitle,바람의나라,,self
 return
 
-^a::
+#e::
 ControlSend,,{Up}, 바람의나라
 return
