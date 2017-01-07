@@ -8,18 +8,37 @@ numIncreaseDamage = 8
 numReduceDefece = 7
 isFixTap = 0
 
+; Set enviroment
 #a::
-; Init all enviroment variables
+; How much you want to maintain mp, hp
 minHPRate := 0.8
 minMPRate := 0.2
+
+conditionHP := 0
+conditionMP := 0
+conditionGeo := 0
+
+geometry[x] := 0
+geometry[y] := 0
+
+Loop {
+	tryCount++
+	If (tryCount > 50) {
+		break
+	}
+	ImageSearch, standX, standY, 0, 0, 1400, 1400, *transFFFFFF resources/X.bmp
+	if ErrorLevel=0
+	{
+		conditionGeo := 1
+		break
+	}
+}
 
 ImageSearch, fullHpX, fullHpY,960,500,A_ScreenWidth,A_ScreenHeight, *80 resources/hpPositionImage.png
 If ErrorLevel = 0
 {
-	MsgBox, Identify HP Gage Position: %fullHpX%, y : %fullHpY%
-}
-else {
-	MsgBox, , , TestText
+	conditionHP := 1
+	;MsgBox, Identify HP Gage Position: %fullHpX%, y : %fullHpY%
 }
 
 hpCoverRangeX := fullHpX + 123 * (1-minHPRate)
@@ -27,22 +46,45 @@ hpCoverRangeX := fullHpX + 123 * (1-minHPRate)
 ImageSearch, fullMpX, fullMpY,960,500,A_ScreenWidth,A_ScreenHeight, *80 resources/mpPositionImage.png
 If ErrorLevel = 0
 {
-	MsgBox, Identify MP Gage Position: %fullMpX%, y : %fullMpY%
+	conditionMP := 1
+	;MsgBox, Identify MP Gage Position: %fullMpX%, y : %fullMpY%
 }
 
 mpCoverRangeX := fullMpX + 123 * (1-minMPRate)
-;MsgBox, Result1 : %fullHpX%, y : %fullHpY% / %fullMpX%, y : %fullMpY% / %hpCoverRangeX% / %mpCoverRangeX%
+
+
+if (conditionMP=1 and conditionHP=1 and conditionGeo=1) {
+	MsgBox Realize hp, mp, geometry info.
+}
+
+pos1[rangeX100a]:= standX + 20
+pos1[rangeX100b]:= standX + 28
+pos1[rangeX10a]:= standX + 29
+pos1[rangeX10b]:= standX + 37
+pos1[rangeX1a]:= standX + 38
+pos1[rangeX1b]:= standX + 46
+pos1[rangeY100a]:= standX + 78
+pos1[rangeY100b]:= standX + 86
+pos1[rangeY10a]:= standX + 87
+pos1[rangeY10b]:= standX + 95
+pos1[rangeY1a]:= standX + 96
+pos1[rangeY1b]:= standX + 104
+pos1[rangeYtop]:= standY
+pos1[rangeYbottom]:= standY + 10
+
 return
 
 #s::
 ;Fix tap to Right toself
 ;MsgBox, Result2: %fullHpX%, y : %fullHpY% / %fullMpX%, y : %fullMpY% / %hpCoverRangeX% / %mpCoverRangeX%
 ControlSend,,{esc}{tab}{home}{Right}{tab},self
-;SetTimer, move, 50
+Loop{
+	Gosub, move
+}
 SetTimer, giveHealToTarget, 500
 SetTimer, giveDoubleHealToTarget, 5000
 SetTimer, giveHealToSelf, 500
-SetTimer, giveManaToSelf, 500
+SetTimer, giveManaToSelf, 50
 return
 
 #d::
@@ -56,10 +98,6 @@ SetTimer, giveDoubleHealToTarget, off
 SetTimer, giveHealToSelf, off
 SetTimer, giveManaToSelf, off
 
-return
-
-#z::
-gosub, movePotal
 return
 
 #q::
@@ -105,37 +143,92 @@ else if ErrorLevel = 1
 }
 return
 
-move:
-CoordMode, Pixel, Relative
-ImageSearch,selfX,selfY,0,0,A_ScreenWidth,A_ScreenHeight, *Trans0xffffff *80 resources/RaDetail.png
-If ErrorLevel = 0
+updateGeomtry(ByRef findRange, ByRef result){
+X100=0
+Loop, 2
 {
-	;MsgBox, Identifyself position X: %selfX% Y: %selfY%
+ImageSearch, xX1001, xY1001, %findRange[rangeX100a]%, %findRange[rangeYtop]%, %findRange[rangeX100b]%, %findRange[rangeYbottom]%, *TransFFFFFF img\%X100%.bmp
+if(ErrorLevel=1){
+X100:=X100+1
 }
-; ReDetail mean target's character
-ImageSearch, targetX,targetY,0,0,A_ScreenWidth,A_ScreenHeight, *Trans0xffffff *80 resources/ReDetail.png
-If ErrorLevel = 0
+else if(ErrorLevel=0){
+break
+}
+}
+X10=0
+Loop, 9
 {
-	;no active state
-	;MouseClick, left, OutX, OutY
-	targetXonWins := Round((targetX-selfX) / 48)
-	targetYonWins := Round((targetY-selfY) / 51)
+ImageSearch, xX101, xY101, %findRange[rangeX10a]%, %findRange[rangeYtop]%, %findRange[rangeX10b]%, %findRange[rangeYbottom]%, *TransFFFFFF img\%X10%.bmp
+if(ErrorLevel=1){
+X10:=X10+1
+}
+else if(ErrorLevel=0){
+break
+}
+}
+X1=0
+Loop, 9
+{
+ImageSearch, xX11, xY11, %findRange[rangeX1a]%, %findRange[rangeYtop]%, %findRange[rangeX1b]%, %findRange[rangeYbottom]%, *TransFFFFFF img\%X1%.bmp
+if(ErrorLevel=1){
+X1:=X1+1
+}
+else if(ErrorLevel=0){
+break
+}
+}
+Y100=0
+Loop, 2
+{
+ImageSearch, yX1001, yY1001, %findRange[rangeY100a]%, %findRange[rangeYtop]%, %findRange[rangeY100b]%, %findRange[rangeYbottom]%, *TransFFFFFF img\%Y100%.bmp
+if(ErrorLevel=1){
+Y100:=Y100+1
+}
+else if(ErrorLevel=0){
+break
+}
+}
+Y10=0
+Loop, 9
+{
+ImageSearch, yX101, yY101, %findRange[rangeY10a]%, %findRange[rangeYtop]%, %findRange[rangeY10b]%, %findRange[rangeYbottom]%, *TransFFFFFF img\%Y10%.bmp
+if(ErrorLevel=1){
+Y10:=Y10+1
+}
+else if(ErrorLevel=0){
+break
+}
+}
+Y1=0
+Loop, 9
+{
+ImageSearch, yX11, yY11, %findRange[rangeY1a]%, %findRange[rangeYtop]%, %findRange[rangeY1b]%, %findRange[rangeYbottom]%, *TransFFFFFF img\%Y1%.bmp
+if(ErrorLevel=1){
+Y1:=Y1+1
+}
+else if(ErrorLevel=0){
+break
+}
+}
+result[x]:=(X100*100)+(X10*10)+(X1)
+result[y]:=(Y100*100)+(Y10*10)+(Y1)
+}
 
-	;MsgBox, target X: %targetXonWins% Y: %targetYonWins%
+move:
+updateGeomtry(pos1, geometry)
+; Todo: we need to find target's geometry
 
-	;send certain(target) windows
-	if (targetXonWins > 0){
-		ControlSend,,{Right},self
-	}
-	if (targetXonWins < 0){
-		ControlSend,,{Left},self
-	}
-	if (targetYonWins > 0){
-		ControlSend,,{Down},self
-	}
-	if (targetYonWins < 0){
-		ControlSend,,{Up},self
-	}
+if(50>geometry[y]){
+ControlSend,, {down},self
+}
+if(50<geometry[y]){
+ControlSend,, {up},self
+}
+if(50>geometry[x]){
+ControlSend,, {right},self
+}
+if(50<geometry[x]){
+ControlSend,, {Left},self
 }
 return
 
@@ -163,48 +256,3 @@ Sleep, 500
 ControlSend,,{7},self
 return
 
-movePotal:
-ImageSearch,selfX,selfY,960,0,A_ScreenWidth,A_ScreenHeight, *Trans0xffffff *80 resources/RaDetail.png
-If ErrorLevel = 0
-{
-	;MsgBox, Identifyself position X: %selfX% Y: %selfY%
-}
-return
-Loop
-{
-ImageSearch, potalX,potalY,960,0,A_ScreenWidth,A_ScreenHeight, *Trans0x000000 *80 resources/potal.png
-	If ErrorLevel = 0
-	{
-		;MsgBox, potalX: %potalX% potalY: %potalY%
-		;MsgBox,selfX: %selfX%selfY: %selfY%
-		potalXonWins := Round((potalX -selfX) / 63)
-		potalYonWins := Round((potalY -selfY) / 25)-1
-		MsgBox, Remaing potal X: %potalXonWins% Y: %potalYonWins%
-		tmpX:=Abs(potalXonWins)
-		tmpY:=Abs(potalYonWins)
-		break
-	}
-}
-
-
-Loop, %tmpX%
-{
-	if (potalXonWins > 0){
-		ControlSend,,{Right},self
-	}
-	else if (potalXonWins < 0){
-		ControlSend,,{Left},self
-	}
-	Sleep,500
-}
-Loop, %tmpY%
-{
-	if (potalYonWins > 0){
-		ControlSend,,{Down},self
-	}
-	else if (potalYonWins < 0){
-		ControlSend,,{Up},self
-	}
-	Sleep,500
-}
-return
