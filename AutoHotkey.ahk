@@ -1,8 +1,7 @@
+Run, %A_AHKPath% %A_ScriptDir%\updateSelfGeometry.ahk
+
 Run, %A_AHKPath% %A_ScriptDir%\ArusMacro.ahk,,,Instance#1_pid
 WinWait, ahk_pid %Instance#1_pid%  ; wait for main script window to be created
-
-Run, %A_AHKPath% %A_ScriptDir%\updateSelfGeometry.ahk,,,Instance#2_pid
-WinWait, ahk_pid %Instance#2_pid%  ; wait for main script window to be created
 
 CoordMode,Pixel,Screen
 
@@ -19,7 +18,6 @@ ImageSearch, standTargetX, standTargetY, findTargetX+880, findTargetY+750, findT
 if ErrorLevel=0
 {
     MsgBox, X position on Target : %standTargetX%, %standTargetY%
-    conditionGeo1 := 1
 }
 else {
     MsgBox, why dont find
