@@ -1,4 +1,4 @@
-Run, %A_AHKPath% %A_ScriptDir%\updateSelfGeometry.ahk
+; Run, %A_AHKPath% %A_ScriptDir%\updateSelfGeometry.ahk
 
 Run, %A_AHKPath% %A_ScriptDir%\ArusMacro.ahk,,,Instance#1_pid
 WinWait, ahk_pid %Instance#1_pid%  ; wait for main script window to be created

@@ -5,10 +5,10 @@ return
 
 receiveTargetGeo(wparam,lparam, msg){
 
-if (wparam = 0 and lparam = 0)
-    Return
-if (wparam = 299 and lparam = 299)
-    Return
+if(isValidGeometryInfo(wparam, lparam) = False)
+{
+    return
+}
 
 ;MsgBox, receive  geometryX1 : %wparam%, geometryY1 : %lparam%
 global geometryX1 := wparam
@@ -18,10 +18,11 @@ global geometryY1 := lparam
 
 receiveSelfGeo(wparam, lparam) {
 
-if (wparam = 0 and lparam = 0)
-    Return
-if (wparam = 299 and lparam = 299)
-    Return
+if(isValidGeometryInfo(wparam, lparam) = False)
+{
+    return
+}
+
 ;MsgBox, receive from self  geometryX1 : %wparam%, geometryY1 : %lparam%
 global geometryX2 = wparam
 global geometryY2 = lparam
@@ -237,14 +238,15 @@ Loop, 9
         break
     }
 }
-geometryX2:=(X100*100)+(X10*10)+(X1)
-geometryY2:=(Y100*100)+(Y10*10)+(Y1)
+tempX:=(X100*100)+(X10*10)+(X1)
+tempY:=(Y100*100)+(Y10*10)+(Y1)
 
 ; When distance over than max, It is false value.
-; if (isValidGeometryInfo() = False) {
-;     return
-; }
-
+if (isValidGeometryInfo(tempX, tempY) = False) {
+    return
+}
+geometryX2 := tempX
+geometryY2 := tempY
 
 totalMove := Abs(geometryX1 - geometryX2) + Abs(geometryY1 - geometryY2)
 ;msgBox, move result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %totalMove%
@@ -263,15 +265,15 @@ Loop %totalMove%
     if(geometryX1<geometryX2){
         ControlSend,, {Left},self
     }
+    Sleep, 250
 }
 return
 
-isValidGeometryInfo(){
+isValidGeometryInfo(x, y){
     ;msgBox, isValidGeometryInfo result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %dist%
-    if(geometryX1 * geometryY1 * geometryX2 * geometryY2 <= 0){
+    if(x*y <= 0 or x = 299 or y = 299){
         return False
     }
-    msgBox, isValidGeometryInfo result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %dist%
     return true
 }
 randomMove:
