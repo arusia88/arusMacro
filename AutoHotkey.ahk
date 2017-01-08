@@ -1,6 +1,11 @@
 Run, %A_AHKPath% %A_ScriptDir%\ArusMacro.ahk,,,Instance#1_pid
 WinWait, ahk_pid %Instance#1_pid%  ; wait for main script window to be created
 
+Run, %A_AHKPath% %A_ScriptDir%\updateSelfGeometry.ahk,,,Instance#2_pid
+WinWait, ahk_pid %Instance#2_pid%  ; wait for main script window to be created
+
+CoordMode,Pixel,Screen
+
 #z::
 gosub, findPositionX
 SetTimer, updateTargetGeometry, 3000
