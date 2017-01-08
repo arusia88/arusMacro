@@ -30,6 +30,8 @@ conditionHP := 0
 conditionMP := 0
 conditionGeo2 := 0
 
+startRandTimer := A_TickCount
+
 
 ImageSearch, standSelfX, standSelfY, 1530, 750, 1616, 805, *transFFFFFF *80 resources/X.bmp
 if ErrorLevel=0
@@ -96,6 +98,7 @@ ControlSend,,{esc}{tab}{home}{Right}{tab},self
 
 SetTimer, updateSelfGeometry, 300
 SetTimer, move, 100
+SetTimer, randomMove, 2000
  ; SetTimer, giveHealToTarget, 500
  ; SetTimer, giveDoubleHealToTarget, 5000
  ; SetTimer, giveHealToSelf, 500
@@ -236,8 +239,42 @@ gosub, move
 ;msgBox, result 22222: taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2%
 Return
 
+isValidGeometryInfo(){
+    distX := geometryX2-geometryX1
+    distY := geometryY2-geometryY1
+    dist := Sqrt(distX*distX + distY*distY)
+    if (dist < 10)
+        return True
+    Else
+        return False
+}
+randomMove:
+
+if (prevGeometryX = geometryX2 and prevGeometryY = geometryY2) {
+    Random, direction , 1, 4
+    if(direction = 1){
+        ControlSend,, {down},self
+    }
+    if(direction = 2){
+        ControlSend,, {up},self
+    }
+    if(direction = 3){
+        ControlSend,, {right},self
+    }
+    if(direction = 4){
+        ControlSend,, {Left},self
+    }
+}
+prevGeometryX := geometryX2
+prevGeometryY := geometryY2
+
+Return
+
 move:
-; Todo: we need to find target's geometry
+; When distance over than max, It is false value.
+if(!isValidGeometryInfo()) {
+    return;
+}
 if(geometryY1>geometryY2){
     ControlSend,, {down},self
 }
