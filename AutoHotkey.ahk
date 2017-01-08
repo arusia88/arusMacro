@@ -3,13 +3,14 @@ WinWait, ahk_pid %Instance#1_pid%  ; wait for main script window to be created
 
 #z::
 gosub, findPositionX
-SetTimer, updateTargetGeometry, 200
+SetTimer, updateTargetGeometry, 3000
 
 Return
 
 findPositionX:
 
-ImageSearch, standTargetX, standTargetY, 890, 760, 1024, 805, *transFFFFFF *80 resources/X.bmp
+WinGetPos, findTargetX, findTargetY, findTargetWidth, findTargetHeight, target
+ImageSearch, standTargetX, standTargetY, findTargetX+880, findTargetY+750, findTargetX+findTargetWidth, findTargetY+findTargetHeight, *transFFFFFF *80 resources/X.bmp
 if ErrorLevel=0
 {
     MsgBox, X position on Target : %standTargetX%, %standTargetY%
