@@ -7,7 +7,7 @@ CoordMode,Pixel,Screen
 
 #z::
 gosub, findTarget
-SetTimer, sendGeometry, 5000
+SetTimer, sendGeometry, 3000
 
 Return
 

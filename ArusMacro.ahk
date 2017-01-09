@@ -7,10 +7,12 @@ targetQueueY = 0
 receiveTargetGeo(wparam,lparam, msg){
     if(isValidGeometryInfo(wparam, lparam) = False)
         Return
-    ;MsgBox, receive  geometryX1 : %wparam%, geometryY1 : %lparam%
+    ; MsgBox, receive  geometryX1 : %wparam%, geometryY1 : %lparam%
     global targetQueueX
     global targetQueueY
     if (targetQueueX = 0 and targetQueueY = 0){
+        queuePop(targetQueueX)
+        queuePop(targetQueueY)
         global geometryX1 = wparam
         global geometryY1 = lparam
     }
@@ -126,7 +128,7 @@ geometryX2 := 0
 geometryY2 := 0
 
 gosub, updateSelfGeometry
-MsgBox, self Position : %geometryX2%, %geometryY2%
+;MsgBox, self Position : %geometryX2%, %geometryY2%
 
 Return
 
@@ -329,12 +331,12 @@ queuePush(ByRef queue, data) {
     StringSplit, OutputArray, queue , `n
     if(OutputArray0 = 0){
         queue = %data%
-        } 
+    }
     queue = %queue%`n%data%
 }
 
 queuePop(ByRef queue) {
     StringSplit, OutputArray, queue , `n
-    StringTrimLeft, queue, queue, 2
-    return %OutputArray0%
+    StringTrimLeft, queue, queue, StrLen(OutputArray1)+1
+    return %OutputArray1%
 }
