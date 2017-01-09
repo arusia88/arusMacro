@@ -1,36 +1,69 @@
 #SingleInstance, force
-OnMessage(7000, "receiveSelfGeo")
+CoordMode,Pixel,Screen
 OnMessage(6000, "receiveTargetGeo")
+
+targetQueueX = 0
+targetQueueY = 0
+receiveTargetGeo(wparam,lparam, msg){
+    if(isValidGeometryInfo(wparam, lparam) = False)
+        Return
+    ;MsgBox, receive  geometryX1 : %wparam%, geometryY1 : %lparam%
+    global targetQueueX
+    global targetQueueY
+    if (targetQueueX = 0 and targetQueueY = 0){
+        global geometryX1 = wparam
+        global geometryY1 = lparam
+    }
+    queuePush(targetQueueX, wparam)
+    queuePush(targetQueueY, lparam)
+
+}
+
+; Set enviroment
+#a::
+gosub, setEnvMacro
 return
 
-receiveTargetGeo(wparam,lparam, msg){
+#s::
+;Fix tap to Right toself
+;MsgBox, Result2: %fullHpX%, y : %fullHpY% / %fullMpX%, y : %fullMpY% / %hpCoverRangeX% / %mpCoverRangeX%
+ControlSend,,{esc}{tab}{home}{Right}{tab},self
+SetTimer, move, 350
+; SetTimer, randomMove, 2000
+; SetTimer, giveHealToTarget, 500
+; SetTimer, giveDoubleHealToTarget, 5000
+; SetTimer, giveHealToSelf, 500
+; SetTimer, giveManaToSelf, 50
+return
 
-if(isValidGeometryInfo(wparam, lparam) = False)
-{
-    return
-}
+#d::
+gosub, workDamageUp
+msgBox, isValidGeometryInfo result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %dist%
+return
 
-;MsgBox, receive  geometryX1 : %wparam%, geometryY1 : %lparam%
-global geometryX1 := wparam
-global geometryY1 := lparam
+#f::
+SetTimer, move, off
+SetTimer, giveHealToTarget, off
+SetTimer, giveDoubleHealToTarget, off
+SetTimer, giveHealToSelf, off
+SetTimer, giveManaToSelf, off
+return
 
-}
+;If you can't change baram processName, Save your file .Encoding to euc-kr
+#q::
+WinSetTitle,바람의나라,,target
+return
 
-receiveSelfGeo(wparam, lparam) {
+#w::
+WinSetTitle,바람의나라,,self
+return
 
-if(isValidGeometryInfo(wparam, lparam) = False)
-{
-    return
-}
+#e::
+ControlSend,,{Up}, 바람의나라
+return
 
-;MsgBox, receive from self  geometryX1 : %wparam%, geometryY1 : %lparam%
-global geometryX2 = wparam
-global geometryY2 = lparam
-
-}
-
-CoordMode,Pixel,Screen
-
+setEnvMacro:
+; Number info of skill
 numMana = 2
 numHeal = 3
 numDoubleHeal = 4
@@ -39,22 +72,19 @@ numIncreaseDamage = 8
 numReduceDefece = 7
 isFixTap = 0
 
-; Set enviroment
-#a::
-; How much you want to maintain mp, hp
+; etc info
 minHPRate := 0.8
 minMPRate := 0.2
-
 conditionHP := 0
 conditionMP := 0
 
+; for random move
 startRandTimer := A_TickCount
 
 ImageSearch, fullHpX, fullHpY,0,0,A_ScreenWidth,A_ScreenHeight, *80 resources/hpPositionImage.png
 If ErrorLevel = 0
 {
     conditionHP := 1
-    ;MsgBox, Identify HP Gage Position: %fullHpX%, y : %fullHpY%
 }
 
 hpCoverRangeX := fullHpX + 123 * (1-minHPRate)
@@ -63,7 +93,6 @@ ImageSearch, fullMpX, fullMpY,0,0,A_ScreenWidth,A_ScreenHeight, *80 resources/mp
 If ErrorLevel = 0
 {
     conditionMP := 1
-    ;MsgBox, Identify MP Gage Position: %fullMpX%, y : %fullMpY%
 }
 
 mpCoverRangeX := fullMpX + 123 * (1-minMPRate)
@@ -72,7 +101,7 @@ WinGetPos, findSelfX, findSelfY, findSelfWidth, findSelfHeight, self
 ImageSearch, standSelfX, standSelfY, findSelfX+880, findSelfY+750, findSelfX+findSelfWidth, findSelfY+findSelfHeight, *transFFFFFF *80 resources/X.bmp
 if ErrorLevel=0
 {
-    MsgBox, X position on Self : %standSelfX%, %standSelfY%
+    ;MsgBox, X position on Self : %standSelfX%, %standSelfY%
 }
 
 standX := standSelfX
@@ -96,79 +125,12 @@ rangeYbottom2:= standY + 10
 geometryX2 := 0
 geometryY2 := 0
 
-return
+gosub, updateSelfGeometry
+MsgBox, self Position : %geometryX2%, %geometryY2%
 
-#s::
-;Fix tap to Right toself
-;MsgBox, Result2: %fullHpX%, y : %fullHpY% / %fullMpX%, y : %fullMpY% / %hpCoverRangeX% / %mpCoverRangeX%
-ControlSend,,{esc}{tab}{home}{Right}{tab},self
-SetTimer, move, 350
-;SetTimer, randomMove, 2000
- ; SetTimer, giveHealToTarget, 500
- ; SetTimer, giveDoubleHealToTarget, 5000
- ; SetTimer, giveHealToSelf, 500
- ; SetTimer, giveManaToSelf, 50
-return
+Return
 
-#d::
-gosub, workDamageUp
- msgBox, isValidGeometryInfo result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %dist%
-return
-
-#f::
-SetTimer, move, off
-SetTimer, giveHealToTarget, off
-SetTimer, giveDoubleHealToTarget, off
-SetTimer, giveHealToSelf, off
-SetTimer, giveManaToSelf, off
-
-return
-
-;If you can't change baram processName, Save your file .Encoding to euc-kr
-#q::
-WinSetTitle,바람의나라,,target
-return
-
-#w::
-WinSetTitle,바람의나라,,self
-return
-
-#e::
-ControlSend,,{Up}, 바람의나라
-return
-
-
-giveHealToSelf:
-CoordMode, Pixel, Screen
-ImageSearch,OutX,OutY, fullHpX+1, fullHpY+1, fullHpX+55, fullHpY+10, *80 resources/hpImage.png
-if ErrorLevel = 0
-{
-    ;MsgBox, It's OKay about HP
-}
-else if ErrorLevel = 1
-{
-    ;MsgBox, Target need to be getting a HP : %hpCoverRangeX%
-    ControlSend,,{Esc}{3}{Home}{Enter},self ;self is my windows name
-    ;Release tap
-    isFixTap := 0
-}
-return
-
-giveManaToSelf:
-CoordMode, Pixel, Screen
-ImageSearch,Out2X,Out2Y, fullMpX+50, fullMpY+1, fullMpX+55, fullMpY+10, *80 resources/mpImage.png
-if ErrorLevel = 0
-{
-    ;MsgBox, It's Okay about MP
-}
-else if ErrorLevel = 1
-{
-    ;MsgBox, Target need to be getting a MP : %mpCoverRangeX%
-    ControlSend,,{%numMana%},self
-}
-return
-
-move:
+updateSelfGeometry:
 X100=0
 Loop, 2
 {
@@ -248,6 +210,18 @@ if (isValidGeometryInfo(tempX, tempY) = False) {
 geometryX2 := tempX
 geometryY2 := tempY
 
+Return
+
+move:
+
+gosub, updateSelfGeometry
+
+; When self geometry arrived target geometry, queuePop
+if (geometryX2 = geometryX1 and geometryY2 = geometryY1){
+    geometryX1 := queuePop(targetQueueX)
+    geometryY1 := queuePop(targetQueueY)
+}
+
 totalMove := Abs(geometryX1 - geometryX2) + Abs(geometryY1 - geometryY2)
 ;msgBox, move result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %totalMove%
 
@@ -271,7 +245,7 @@ return
 
 isValidGeometryInfo(x, y){
     ;msgBox, isValidGeometryInfo result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %dist%
-    if(x*y <= 0 or x = 299 or y = 299){
+    if(x*y <= 0 or x >= 299 or y >= 299){
         return False
     }
     return true
@@ -321,3 +295,46 @@ Sleep, 500
 ControlSend,,{7},self
 return
 
+giveHealToSelf:
+CoordMode, Pixel, Screen
+ImageSearch,OutX,OutY, fullHpX+1, fullHpY+1, fullHpX+55, fullHpY+10, *80 resources/hpImage.png
+if ErrorLevel = 0
+{
+    ;MsgBox, It's OKay about HP
+}
+else if ErrorLevel = 1
+{
+    ;MsgBox, Target need to be getting a HP : %hpCoverRangeX%
+    ControlSend,,{Esc}{3}{Home}{Enter},self ;self is my windows name
+    ;Release tap
+    isFixTap := 0
+}
+return
+
+giveManaToSelf:
+CoordMode, Pixel, Screen
+ImageSearch,Out2X,Out2Y, fullMpX+50, fullMpY+1, fullMpX+55, fullMpY+10, *80 resources/mpImage.png
+if ErrorLevel = 0
+{
+    ;MsgBox, It's Okay about MP
+}
+else if ErrorLevel = 1
+{
+    ;MsgBox, Target need to be getting a MP : %mpCoverRangeX%
+    ControlSend,,{%numMana%},self
+}
+return
+
+queuePush(ByRef queue, data) {
+    StringSplit, OutputArray, queue , `n
+    if(OutputArray0 = 0){
+        queue = %data%
+        } 
+    queue = %queue%`n%data%
+}
+
+queuePop(ByRef queue) {
+    StringSplit, OutputArray, queue , `n
+    StringTrimLeft, queue, queue, 2
+    return %OutputArray0%
+}

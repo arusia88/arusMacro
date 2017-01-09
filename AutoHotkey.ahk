@@ -6,22 +6,26 @@ WinWait, ahk_pid %Instance#1_pid%  ; wait for main script window to be created
 CoordMode,Pixel,Screen
 
 #z::
-gosub, findPositionX
-SetTimer, updateTargetGeometry, 3000
+gosub, findTarget
+SetTimer, sendGeometry, 5000
 
 Return
+
+findTarget:
+gosub, findPositionX
+gosub, updateTargetGeometry
+MsgBox, target position : %geometryX1%, %geometryY1%
+Return
+
+sendGeometry:
+gosub, updateTargetGeometry
+gosub, sendTargetGeometry
+return
 
 findPositionX:
 
 WinGetPos, findTargetX, findTargetY, findTargetWidth, findTargetHeight, target
 ImageSearch, standTargetX, standTargetY, findTargetX+880, findTargetY+750, findTargetX+findTargetWidth, findTargetY+findTargetHeight, *transFFFFFF *80 resources/X.bmp
-if ErrorLevel=0
-{
-    MsgBox, X position on Target : %standTargetX%, %standTargetY%
-}
-else {
-    MsgBox, why dont find
-}
 
 standX := standTargetX
 standY := standTargetY
@@ -52,7 +56,7 @@ TX100=0
 Loop, 2
 {
 
-    ImageSearch, xX1001, xY1001, rangeX100a%j%, rangeYtop%j%, rangeX100b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TX100%.bmp
+    ImageSearch, xX1001, xY1001, rangeX100a%j%, rangeYtop%j%, rangeX100b%j%, rangeYbottom%j%, *TransC18100 *50 resources\%TX100%.bmp
     if(ErrorLevel=1){
         TX100:=TX100+1
         ;MsgBox, find 100!!
@@ -65,7 +69,7 @@ Loop, 2
 TX10=0
 Loop, 9
 {
-    ImageSearch, xX101, xY101, rangeX10a%j%, rangeYtop%j%, rangeX10b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TX10%.bmp
+    ImageSearch, xX101, xY101, rangeX10a%j%, rangeYtop%j%, rangeX10b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TX10%.bmp
     if(ErrorLevel=1){
         TX10:=TX10+1
     }
@@ -76,7 +80,7 @@ Loop, 9
 TX1=0
 Loop, 9
 {
-    ImageSearch, xX11, xY11, rangeX1a%j%, rangeYtop%j%, rangeX1b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TX1%.bmp
+    ImageSearch, xX11, xY11, rangeX1a%j%, rangeYtop%j%, rangeX1b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TX1%.bmp
     if(ErrorLevel=1){
         TX1:=TX1+1
     }
@@ -87,7 +91,7 @@ Loop, 9
 TY100=0
 Loop, 2
 {
-    ImageSearch, yX1001, yY1001, rangeY100a%j%, rangeYtop%j%, rangeY100b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TY100%.bmp
+    ImageSearch, yX1001, yY1001, rangeY100a%j%, rangeYtop%j%, rangeY100b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TY100%.bmp
     if(ErrorLevel=1){
         TY100:=TY100+1
     }
@@ -98,7 +102,7 @@ Loop, 2
 TY10=0
 Loop, 9
 {
-    ImageSearch, yX101, yY101, rangeY10a%j%, rangeYtop%j%, rangeY10b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TY10%.bmp
+    ImageSearch, yX101, yY101, rangeY10a%j%, rangeYtop%j%, rangeY10b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TY10%.bmp
     if(ErrorLevel=1){
         TY10:=TY10+1
     }
@@ -109,7 +113,7 @@ Loop, 9
 TY1=0
 Loop, 9
 {
-    ImageSearch, yX11, yY11, rangeY1a%j%, rangeYtop%j%, rangeY1b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TY1%.bmp
+    ImageSearch, yX11, yY11, rangeY1a%j%, rangeYtop%j%, rangeY1b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TY1%.bmp
     if(ErrorLevel=1){
         TY1:=TY1+1
     }
@@ -119,9 +123,11 @@ Loop, 9
 }
 geometryX%j%:=(TX100*100)+(TX10*10)+(TX1)
 geometryY%j%:=(TY100*100)+(TY10*10)+(TY1)
+return
 
+sendTargetGeometry:
 DetectHiddenWindows, On   ; main script window is hidden
 WinGet, hwnd#1, ID, ahk_pid %Instance#1_pid%
 SendMessage,  6000, geometryX1, geometryY1, , ahk_id %hwnd#1%
-
 return
+
