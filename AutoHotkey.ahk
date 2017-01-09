@@ -56,7 +56,7 @@ TX100=0
 Loop, 2
 {
 
-    ImageSearch, xX1001, xY1001, rangeX100a%j%, rangeYtop%j%, rangeX100b%j%, rangeYbottom%j%, *TransC18100 *50 resources\%TX100%.bmp
+    ImageSearch, xX1001, xY1001, rangeX100a%j%, rangeYtop%j%, rangeX100b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TX100%.bmp
     if(ErrorLevel=1){
         TX100:=TX100+1
         ;MsgBox, find 100!!
@@ -69,7 +69,7 @@ Loop, 2
 TX10=0
 Loop, 9
 {
-    ImageSearch, xX101, xY101, rangeX10a%j%, rangeYtop%j%, rangeX10b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TX10%.bmp
+    ImageSearch, xX101, xY101, rangeX10a%j%, rangeYtop%j%, rangeX10b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TX10%.bmp
     if(ErrorLevel=1){
         TX10:=TX10+1
     }
@@ -80,7 +80,7 @@ Loop, 9
 TX1=0
 Loop, 9
 {
-    ImageSearch, xX11, xY11, rangeX1a%j%, rangeYtop%j%, rangeX1b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TX1%.bmp
+    ImageSearch, xX11, xY11, rangeX1a%j%, rangeYtop%j%, rangeX1b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TX1%.bmp
     if(ErrorLevel=1){
         TX1:=TX1+1
     }
@@ -91,7 +91,7 @@ Loop, 9
 TY100=0
 Loop, 2
 {
-    ImageSearch, yX1001, yY1001, rangeY100a%j%, rangeYtop%j%, rangeY100b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TY100%.bmp
+    ImageSearch, yX1001, yY1001, rangeY100a%j%, rangeYtop%j%, rangeY100b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TY100%.bmp
     if(ErrorLevel=1){
         TY100:=TY100+1
     }
@@ -102,7 +102,7 @@ Loop, 2
 TY10=0
 Loop, 9
 {
-    ImageSearch, yX101, yY101, rangeY10a%j%, rangeYtop%j%, rangeY10b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TY10%.bmp
+    ImageSearch, yX101, yY101, rangeY10a%j%, rangeYtop%j%, rangeY10b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TY10%.bmp
     if(ErrorLevel=1){
         TY10:=TY10+1
     }
@@ -113,7 +113,7 @@ Loop, 9
 TY1=0
 Loop, 9
 {
-    ImageSearch, yX11, yY11, rangeY1a%j%, rangeYtop%j%, rangeY1b%j%, rangeYbottom%j%, *TransFFFFFF *50 resources\%TY1%.bmp
+    ImageSearch, yX11, yY11, rangeY1a%j%, rangeYtop%j%, rangeY1b%j%, rangeYbottom%j%, *TransFFFFFF *80 resources\%TY1%.bmp
     if(ErrorLevel=1){
         TY1:=TY1+1
     }
