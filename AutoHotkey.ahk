@@ -1,13 +1,14 @@
+#SingleInstance, force
 ; Run, %A_AHKPath% %A_ScriptDir%\updateSelfGeometry.ahk
 
 Run, %A_AHKPath% %A_ScriptDir%\ArusMacro.ahk,,,Instance#1_pid
-WinWait, ahk_pid %Instance#1_pid%  ; wait for main script window to be created
+; WinWait, ahk_pid %Instance#1_pid%  ; wait for main script window to be created
 
 CoordMode,Pixel,Screen
 
 #z::
 gosub, findTarget
-SetTimer, sendGeometry, 3000
+SetTimer, sendGeometry, 300
 
 Return
 

@@ -5,19 +5,26 @@ OnMessage(6000, "receiveTargetGeo")
 targetQueueX = 0
 targetQueueY = 0
 receiveTargetGeo(wparam,lparam, msg){
-    if(isValidGeometryInfo(wparam, lparam) = False)
+    ; if (prevX = geometryX1 and prevY = geometryY1)
+    ;     Return
+    if (isValidGeometryInfo(wparam, lparam) = False)
         Return
-    ; MsgBox, receive  geometryX1 : %wparam%, geometryY1 : %lparam%
-    global targetQueueX
-    global targetQueueY
-    if (targetQueueX = 0 and targetQueueY = 0){
-        queuePop(targetQueueX)
-        queuePop(targetQueueY)
-        global geometryX1 = wparam
-        global geometryY1 = lparam
-    }
-    queuePush(targetQueueX, wparam)
-    queuePush(targetQueueY, lparam)
+    ; ; MsgBox, receive  geometryX1 : %wparam%, geometryY1 : %lparam%
+    ; global targetQueueX
+    ; global targetQueueY
+    ; if (targetQueueX = 0 and targetQueueY = 0){
+    ;     queuePop(targetQueueX)
+    ;     queuePop(targetQueueY)
+    ;     global geometryX1 = wparam
+    ;     global geometryY1 = lparam
+    ; }
+    ; prevX = wparam
+    ; prevY = lparam
+    ; queuePush(targetQueueX, wparam)
+    ; queuePush(targetQueueY, lparam)
+
+    global geometryX1 = wparam
+    global geometryY1 = lparam
 
 }
 
@@ -30,7 +37,7 @@ return
 ;Fix tap to Right toself
 ;MsgBox, Result2: %fullHpX%, y : %fullHpY% / %fullMpX%, y : %fullMpY% / %hpCoverRangeX% / %mpCoverRangeX%
 ControlSend,,{esc}{tab}{home}{Right}{tab},self
-SetTimer, move, 350
+; SetTimer, move, 250
 ; SetTimer, randomMove, 2000
 ; SetTimer, giveHealToTarget, 500
 ; SetTimer, giveDoubleHealToTarget, 5000
@@ -40,7 +47,9 @@ return
 
 #d::
 gosub, workDamageUp
-msgBox, isValidGeometryInfo result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %dist%
+gosub, move
+
+
 return
 
 #f::
@@ -53,15 +62,15 @@ return
 
 ;If you can't change baram processName, Save your file .Encoding to euc-kr
 #q::
-WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,target
+WinSetTitle,?Ù¶??Ç³???,target
 return
 
 #w::
-WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,self
+WinSetTitle,?Ù¶??Ç³???,self
 return
 
 #e::
-ControlSend,,{Up}, ¹Ù¶÷ÀÇ³ª¶ó
+ControlSend,,{Up}, ?Ù¶??Ç³???
 return
 
 setEnvMacro:
@@ -128,7 +137,7 @@ geometryX2 := 0
 geometryY2 := 0
 
 gosub, updateSelfGeometry
-;MsgBox, self Position : %geometryX2%, %geometryY2%
+MsgBox, self Position : %geometryX2%, %geometryY2%
 
 Return
 
@@ -212,22 +221,20 @@ if (isValidGeometryInfo(tempX, tempY) = False) {
 geometryX2 := tempX
 geometryY2 := tempY
 
+gosub, move
+
 Return
 
 move:
-
-gosub, updateSelfGeometry
-
 ; When self geometry arrived target geometry, queuePop
-if (geometryX2 = geometryX1 and geometryY2 = geometryY1){
-    geometryX1 := queuePop(targetQueueX)
-    geometryY1 := queuePop(targetQueueY)
-}
+; geometryX1 := queuePop(targetQueueX)
+; geometryY1 := queuePop(targetQueueY)
 
-totalMove := Abs(geometryX1 - geometryX2) + Abs(geometryY1 - geometryY2)
-;msgBox, move result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %totalMove%
+totalMoveX := Abs(geometryX1 - geometryX2)
+totalMoveY := Abs(geometryY1 - geometryY2)
+; msgBox, move result : taget %geometryX1%, %geometryY1% / self %geometryX2%, %geometryY2% / dist: %totalMove%
 
-Loop %totalMove%
+Loop %totalMoveY%
 {
     if(geometryY1>geometryY2){
         ControlSend,, {down},self
@@ -235,14 +242,20 @@ Loop %totalMove%
     if(geometryY1<geometryY2){
         ControlSend,, {up},self
     }
+    Sleep, 400
+}
+Loop %totalMoveX%
+{
     if(geometryX1>geometryX2){
         ControlSend,, {right},self
     }
     if(geometryX1<geometryX2){
         ControlSend,, {Left},self
     }
-    Sleep, 250
+    Sleep, 400
 }
+gosub, updateSelfGeometry
+
 return
 
 isValidGeometryInfo(x, y){
