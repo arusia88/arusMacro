@@ -1,3 +1,4 @@
+
 #SingleInstance, force
 CoordMode,Pixel,Screen
 OnMessage(6000, "receiveTargetGeo")
@@ -31,6 +32,7 @@ receiveTargetGeo(wparam,lparam, msg){
 ; Set enviroment
 #a::
 gosub, setEnvMacro
+gosub, sendDirectionKey
 return
 
 #s::
@@ -60,18 +62,55 @@ SetTimer, giveHealToSelf, off
 SetTimer, giveManaToSelf, off
 return
 
-;If you can't change baram processName, Save your file .Encoding to euc-kr
+;****If you can't change baram processName, Save your file .Encoding to euc-kr
+; reload and set
 #q::
-WinSetTitle,?Ù¶??Ç³???,target
+WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,target
 return
 
 #w::
-WinSetTitle,?Ù¶??Ç³???,self
+WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,self
 return
 
 #e::
-ControlSend,,{Up}, ?Ù¶??Ç³???
+ControlSend,,{Up},¹Ù¶÷ÀÇ³ª¶ó
 return
+
+sendDirectionKey:
+Loop
+{
+    Sleep,10
+
+    if (GetKeystate("Left") = 1)
+    {
+        ControlSend, , {Left}, self
+        break
+    }
+
+    if (GetKeystate("Right") = 1)
+    {
+        ControlSend, , {Right}, self
+        break
+    }
+
+    if (GetKeystate("Up") = 1)
+    {
+        ControlSend, , {Up}, self
+        break
+    }
+
+    if (GetKeystate("Down") = 1)
+    {
+        ControlSend, , {Down}, self
+        break
+    }
+
+
+
+    Gosub, sendDirectionKey
+
+}
+Return
 
 setEnvMacro:
 ; Number info of skill
