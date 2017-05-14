@@ -6,6 +6,13 @@ SetControlDelay -1
 
 version = v0.1
 
+; map info insert
+rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉
+StringSplit, MapList, rawMapList, %A_Space%
+Loop, %MapList0%
+{
+    MapNameList .=MapList%A_Index% . "|"
+}
 
 random, a
 Goto, Go
@@ -24,7 +31,7 @@ Gui, Add, Radio, x36 y100 h20 v경마, 경변(마력)
 Gui, Add, Radio, x130 y80 h20 , 계속돌기
 Gui, Add, Text, x126 y103 h20 CBlue, 변환횟수
 Gui, Add, Edit, x180 y100 w20 h20 v변환횟수, 4
-Gui, Add, GroupBox, x26 y140 w190 h230 , http://dmcmcr.blogspot.kr/
+Gui, Add, GroupBox, x26 y140 w190 h230 , Arus전용사냥매크로
 Gui, Add, CheckBox, x36 y160 w40 h20 vArm1 checked, 보무
 Gui, Add, Edit, x76 y160 w20 h20 vArm2, q
 Gui, Add, Edit, x96 y160 w20 h20 vArm3, w
@@ -38,8 +45,8 @@ Gui, Add, CheckBox, x36 y220 w40 h20 vsa3 checked, 헬파
 Gui, Add, DropDownList, x76 y220 w40 vsb3 choose6, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x36 y240 w40 h20 vsa4 checked, 성려
 Gui, Add, DropDownList, x76 y240 w40 vsb4 choose1, 1|2|3|4|5|6|7|8|9|0
-Gui, Add, CheckBox, x36 y260 w40 h20 vsa5, '첨
-Gui, Add, DropDownList, x76 y260 w40 vsb5 choose5, 1|2|3|4|5|6|7|8|9|0
+Gui, Add, CheckBox, x36 y260 w40 h20 vsa5 checked, '첨
+Gui, Add, DropDownList, x76 y260 w40 vsb5 choose7, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x36 y280 w40 h20 vsa6, 시폭
 Gui, Add, DropDownList, x76 y280 w40 vsb6 choose10, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y260 w40 h20 vsa7 checked, 혼
@@ -55,6 +62,7 @@ Gui, Add, DropDownList, x76 y320 w40 vsb10 choose9, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y280 w68 h20 vc사슬 , 사슬
 Gui, Add, Edit, x196 y280 w15 h20 ve사슬 +Center, s
 Gui, Add, CheckBox, x126 y300 h20 v랜덤이동, 랜덤이동
+Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose1, %MapNameList%
 Gui, Add, CheckBox, x36 y340 h20 vDefenseHupung, 허풍선방지
 Gui, Add, CheckBox, x126 y340 h20 v축지, 축지사용(z)
 Gui, Add, Button, x226 y20 w55 h30 g시작, 시작
@@ -99,7 +107,6 @@ Gosub, 성능향상
 return
 테스트용:
 Gosub, 재설정
-Gosub, 자경영혼사
 시작:
 GuiControl, Disable, 시작
 RandomTimer:=A_TickCount
@@ -107,8 +114,9 @@ gosub, 재설정
 Loop{
     WinActivate, 바람의나라
     Gui, submit, nohide
-    ; Gosub 좌표리스트
-    Gosub, 자경영혼사
+    ; Gosub 대기실부터던전
+    ; Gosub 위례부터대기실
+    Gosub %selectedMap%
     Gosub 좌표
     Gosub 랜덤이동
     Gosub 버프
@@ -269,7 +277,7 @@ if(ErrorLevel=0)
         if(영혼체력=1 or 영혼마력=1){
             초기화=1
             Sleep 10000
-            gosub, 자경영혼사
+            ; gosub, 위례부터대기실
         }
         if(중=1){
             Loop {
@@ -439,99 +447,7 @@ if(환수행동력체크=0){
     환수행동력체크=1
 }
 return
-좌표리스트:
-ImageSearch, X1, Y1, 800, 100, 950, 300, Img\Hwansu.bmp
-if(ErrorLevel=1){
-    Send p
-}
-ImageSearch, X1, Y1, 1, 1, 1200, 500, *80 Img\MahanOut.bmp
-if(ErrorLevel=0){
-    갈X:=17, 갈Y:=7
-    guicontrol,text,위치, 진입로
-    Send {esc}{up}
-    gosub, 환수귀환
-    gosub, 환수행동력
-    gosub, 바퀴카운트
-    gosub, 자경
-    초기화=0
-    환수체크=0
-    허풍선방지체크=0
-    Sleep 200
-    if(혼자=1 or 같이=1){
-        Loop, 1{
-            Send {esc}
-            sleep 200
-            Send {Ctrl down}r{Ctrl up}
-            Sleep 2000
-            Loop, 100 {
-                ImageSearch, X포탈, Y포탈, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+findSelfHeight, *80 Img\Potal.bmp
-                if(ErrorLevel=0){
-                    X포탈:=X포탈+30
-                    Y포탈:=Y포탈+30
-                    ; MsgBox, x포탈y포탈 위치 : %X포탈% , %Y포탈%
-                    Send {esc}
-                    sleep 100
-                    ; MsgBox, found
-                    ControlClick, x%X포탈% y%Y포탈%, 바람의나라
-                    ; ControlSend, , {Tab}, ahk_class Nexon.NWind
-                    ; sleep 200
-                    ; ControlSend, , {Right}, ahk_class Nexon.NWind
-                    ; sleep 200
-                    ; ControlSend, , {Enter}, ahk_class Nexon.NWind
-                    sleep 200
-                    if(혼자=1){
-                        Sleep 1000
-                        Send {down}
-                        Sleep 500
-                        Send {enter}
-                        Sleep 500
-                        Send {esc}
-                        Sleep 1000
-                    }
-                    if(같이=1){
-                        Sleep 1000
-                        Send {up}
-                        Sleep 500
-                        Send {Enter}
-                        Sleep 400
-                        Send {up}
-                        Sleep 500
-                        Send {Enter}
-                        Sleep 400
-                        Send {esc}
-                        Sleep 1000
-                    }
-                    break
-                }
-                Sleep 30
-            }
-            if(ErrorLevel=0){
 
-
-            }
-        }
-    }
-}
-ImageSearch, X1, Y1, 1, 1, 1200, 500, *80 Img\in.bmp
-if(ErrorLevel=0){
-    guicontrol,text,위치, 소굴
-    gosub, 환수소환
-    환수귀환체크=0
-    환수행동력체크=0
-    바퀴초기화=0
-    if(X좌표=17 and Y좌표=11 or 초기화=0){
-        갈X:=16, 갈Y:=13
-        초기화=1
-    }
-    if(X좌표=16 and Y좌표=13){
-        갈X:=17, 갈Y:=11
-    }
-    ImageSearch, X1, Y1, 1, 1, 1400, 500, *TransFFFFFF *80 Img\exit.bmp
-    if(ErrorLevel=0){
-        gosub, 허풍선방지
-    }
-}
-return
 허풍선방지:
 if(허풍선방지체크=0){
     if(DefenseHupung=1){
@@ -557,403 +473,7 @@ if(바퀴초기화=0){
     guicontrol,text,text2,%바퀴%바퀴
     바퀴초기화=1
 }
-좌표:
-X백=0
-Loop, 9
-{
-    ImageSearch, X백1, xY백1, %범위X백a%, %범위Y위%, %범위X백b%, %범위Y아래%, *TransFFFFFF *80 Img\%X백%.bmp
-    if(ErrorLevel=1){
-        X백:=X백+1
-    }
-    else if(ErrorLevel=0){
-        break
-    }
-}
-X십=0
-Loop, 9
-{
-    ImageSearch, X십1, xY십1, %범위X십a%, %범위Y위%, %범위X십b%, %범위Y아래%, *TransFFFFFF *80 Img\%X십%.bmp
-    if(ErrorLevel=1){
-        X십:=X십+1
-    }
-    else if(ErrorLevel=0){
-        break
-    }
-}
-X일=0
-Loop, 9
-{
-    ImageSearch, X일1, xY일1, %범위X일a%, %범위Y위%, %범위X일b%, %범위Y아래%, *TransFFFFFF *80 Img\%X일%.bmp
-    if(ErrorLevel=1){
-        X일:=X일+1
-    }
-    else if(ErrorLevel=0){
-        break
-    }
-}
-Y백=0
-Loop, 9
-{
-    ImageSearch, Y백1, xY백1, %범위Y백a%, %범위Y위%, %범위Y백b%, %범위Y아래%, *TransFFFFFF *80 Img\%Y백%.bmp
-    if(ErrorLevel=1){
-        Y백:=Y백+1
-    }
-    else if(ErrorLevel=0){
-        break
-    }
-}
-Y십=0
-Loop, 9
-{
-    ImageSearch, Y십1, xY십1, %범위Y십a%, %범위Y위%, %범위Y십b%, %범위Y아래%, *TransFFFFFF *80 Img\%Y십%.bmp
-    if(ErrorLevel=1){
-        Y십:=Y십+1
-    }
-    else if(ErrorLevel=0){
 
-        break
-    }
-}
-Y일=0
-Loop, 9
-{
-    ImageSearch, Y일1, xY일1, %범위Y일a%, %범위Y위%, %범위Y일b%, %범위Y아래%, *TransFFFFFF *80 Img\%Y일%.bmp
-    if(ErrorLevel=1){
-        Y일:=Y일+1
-    }
-    else if(ErrorLevel=0){
-        break
-    }
-}
-X좌표:=(X백*100)+(X십*10)+(X일)
-Y좌표:=(Y백*100)+(Y십*10)+(Y일)
-if(갈Y>Y좌표){
-    ControlSend,, {down},ahk_class Nexon.NWind
-    Sleep 50
-}
-if(갈Y<Y좌표){
-    ControlSend,, {up},ahk_class Nexon.NWind
-    Sleep 50
-}
-if(갈X>X좌표){
-    ControlSend,, {right},ahk_class Nexon.NWind
-    Sleep 50
-}
-if(갈X<X좌표){
-    ControlSend,, {Left},ahk_class Nexon.NWind
-    Sleep 50
-}
-Gosub, 기원
-; MsgBox, 가야할X, 갈X %갈X% 가야할Y, 갈Y %갈Y% 현X, 현X %X좌표% 현Y, 현Y %Y좌표%초기화값, 값 %초기화%
-guicontrol, 2:text,가야할X, 갈X %갈X%
-guicontrol, 2:text,가야할Y, 갈Y %갈Y%
-guicontrol, 2:text,현X, 현X %X좌표%
-guicontrol, 2:text,현Y, 현Y %Y좌표%
-guicontrol, 2:text,초기화값, 값 %초기화%
-return
-자경영혼사:
-초기화=1000
-Loop{
-    Gosub, 자경리스트
-    Gosub, 좌표
-    Gosub, 랜덤이동
-    if(초기화=0212){
-        break
-    }
-}
-return
-자경리스트:
-if(초기화=1000){
-    Sleep 5000
-    Send {Shift down}zz{shift up}3{enter}
-    Sleep 200
-    Send {Shift down}zz{shift up}3{enter}
-    Sleep 200
-    초기화=1002
-}
-ImageSearch, x위례성, y위례성, 1, 1, 1100, 200, *TransFFFFFF *80 Img\위례성.bmp
-if(ErrorLevel=0){
-    guicontrol, 2:text,Gui2Text6, 위례성
-    if(초기화=1002){
-        if(축지=1){
-            Sleep 200
-            Send uz
-            Sleep 300
-            Send {ctrl down}{up}{ctrl up}{enter}
-            Sleep 200
-            Send {enter}{esc}
-        }
-        갈X:=75, 갈Y:=72
-        초기화=1003
-    }
-    if(X좌표=75 and Y좌표=72){
-        갈X:=35, 갈Y:=72
-    }
-    if(X좌표=35 and Y좌표=72){
-        갈X:=35, 갈Y:=71
-    }
-    if(X좌표=35 and Y좌표=71){
-        Loop, 10{
-            Send {up}
-            sleep 200
-        }
-        갈X:=6, 갈Y:=1
-        Sleep 7000
-    }
-    if(초기화=1004 or 초기화=0001){
-        if(축지=1){
-            Sleep 200
-            Send uz
-            Sleep 300
-            Send {ctrl down}{down}{ctrl up}{enter}
-            Sleep 200
-            Send {enter}{esc}
-        }
-        갈X:=79, 갈Y:=99
-        초기화=0000
-    }
-}
-ImageSearch, x영혼사, y영혼사, 1, 1, 1100, 200, *TransFFFFFF *80 Img\영혼사.bmp
-if(ErrorLevel=0){
-    Gui, submit, nohide
-    guicontrol, 2:text,Gui2Text6, 위례성영혼사
-    Loop, {
-        ImageSearch, xNPC, yNPC, 1, 1, 1200, 1200, *80 Img\영혼사NPC.bmp
-        if(ErrorLevel=0){
-            Break
-        }
-    }
-    Loop, %변환횟수%{
-        Send {up}
-        Sleep 500
-        Send {up}
-        Send {esc}
-        Click, %xNPC%, %yNPC%
-        sleep 1000
-        Send {down}
-        Sleep 500
-        Send {enteR}
-        Sleep 1000
-        if(영혼체력=1){
-            Send {down}
-            sleep 500
-        }
-        if(영혼마력=1){
-            Send {down}{down}
-            sleep 500
-        }
-        Send {enter}
-        Sleep 1000
-        Send {down}
-        sleep 500
-        Send {enter}
-        Sleep 1000
-        Send {enter}
-        Sleep 500
-    }
-    초기화=1004
-    if(초기화=1004){
-        Send {Shift down}zz{Shift up}3{enter}
-        sleep 7000
-    }
-}
-ImageSearch, x남쪽숲, y남쪽숲, 1, 1, 1100, 200, *TransFFFFFF *80 Img\남쪽숲.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 위례성-남쪽숲갈림길
-    if(초기화=0000){
-        갈X:=8, 갈Y:=7
-        초기화=0001
-    }
-    if(X좌표=8 and Y좌표=7){
-        갈X:=16, 갈Y:=8
-    }
-    if(X좌표=16 and Y좌표=8 or 초기화=0201){
-        갈X:=16, 갈Y:=9
-        초기화=0001
-    }
-}
-ImageSearch, x대기실, y대기실, 1, 1, 1100, 200, *TransFFFFFF *80 Img\대기실.bmp
-if(ErrorLevel=0){
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로대기실
-    if(초기화=0001){
-        갈X:=13, 갈Y:=5
-        초기화=0201
-    }
-    if(X좌표=13 and Y좌표=05 or 초기화=0202){
-        갈X:=13, 갈Y:=0
-        초기화=0201
-    }
-}
-
-
-ImageSearch, x201, y201, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-01.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-01
-    if(초기화=0201){
-        갈X:=12, 갈Y:=6
-        초기화=0202
-    }
-    if(X좌표=12 and Y좌표=6 or 초기화=0203){
-        갈X:=0, 갈Y:=6
-        초기화=0202
-    }
-}
-ImageSearch, x202, y202, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-02.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-02
-    if(초기화=0202){
-        갈X:=8, 갈Y:=17
-        초기화=0203
-    }
-    if(X좌표=8 and Y좌표=17){
-        갈X:=8, 갈Y:=4
-    }
-    if(X좌표=8 and Y좌표=4 or 초기화=0204){
-        갈X:=0, 갈Y:=4
-        초기화=0203
-    }
-}
-ImageSearch, x203, y203, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-03.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-03
-    if(초기화=0203){
-        갈X:=6, 갈Y:=21
-        초기화=0204
-    }
-    if(X좌표=6 and Y좌표=21 or 초기화=0205){
-        갈X:=6, 갈Y:=0
-        초기화=0204
-    }
-}
-ImageSearch, x204, y204, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-04.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-04
-    if(초기화=0204){
-        갈X:=5, 갈Y:=8
-        초기화=0205
-    }
-    if(X좌표=5 and Y좌표=8){
-        갈X:=15, 갈Y:=8
-    }
-    if(X좌표=15 and Y좌표=8){
-        갈X:=15, 갈Y:=4
-    }
-    if(X좌표=15 and Y좌표=4 or 초기화=0206){
-        갈X:=29, 갈Y:=4
-        초기화=0205
-    }
-}
-ImageSearch, x205, y205, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-05.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-05
-    if(초기화=0205){
-        갈X:=5, 갈Y:=4
-        초기화=0206
-    }
-    if(X좌표=5 and Y좌표=4){
-        갈X:=5, 갈Y:=21
-    }
-    if(X좌표=5 and Y좌표=21 or 초기화=0207){
-        갈X:=19, 갈Y:=21
-        초기화=0206
-    }
-}
-ImageSearch, x206, y206, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-06.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-06
-    if(초기화=0206){
-        갈X:=23, 갈Y:=14
-        초기화=0207
-    }
-    if(X좌표=23 and Y좌표=14 or 초기화=0208){
-        갈X:=23, 갈Y:=16
-        초기화=0207
-    }
-}
-ImageSearch, x207, y207, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-07.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-07
-    if(초기화=0207){
-        갈X:=20, 갈Y:=15
-        초기화=0208
-    }
-    if(X좌표=20 and Y좌표=15 or 초기화=0209){
-        갈X:=20, 갈Y:=0
-        초기화=0208
-    }
-}
-ImageSearch, x208, y208, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-08.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-08
-    if(초기화=0208){
-        갈X:=9, 갈Y:=20
-        초기화=0209
-    }
-    if(X좌표=9 and Y좌표=20){
-        갈X:=13, 갈Y:=20
-    }
-    if(X좌표=13 and Y좌표=20){
-        갈X:=13, 갈Y:=5
-    }
-    if(X좌표=13 and Y좌표=5 or 초기화=0210){
-        갈X:=19, 갈Y:=5
-        초기화=0209
-    }
-}
-ImageSearch, x209, y209, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-09.bmp
-if(ErrorLevel=0){
-    Gosub, 버프
-    Gosub, 몹인식
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-09
-    if(초기화=0209){
-        갈X:=10, 갈Y:=7
-        초기화=0210
-    }
-    if(X좌표=10 and Y좌표=7){
-        갈X:=10, 갈Y:=5
-    }
-    if(X좌표=10 and Y좌표=5){
-        갈X:=20, 갈Y:=5
-    }
-    if(X좌표=20 and Y좌표=5 or 초기화=0211){
-        갈X:=20, 갈Y:=0
-        초기화=0210
-    }
-}
-ImageSearch, x210, y210, 1, 1, 1100, 200, *TransFFFFFF *80 Img\2-10.bmp
-if(ErrorLevel=0){
-    guicontrol, 2:text,Gui2Text6, 마한산적굴진입로2-10
-    if(초기화=0210){
-        갈X:=11, 갈Y:=9
-        초기화=0211
-    }
-    if(X좌표=11 and Y좌표=9){
-        초기화=0212
-    }
-    if(초기화=1002){
-        Send {Shift down}zz{Shift up}3{enter}
-        sleep 2000
-    }
-}
-return
 랜덤이동:
 if(랜덤이동=1){
     Cal_RandomTimer:=A_TickCount-RandomTimer
@@ -1128,4 +648,7 @@ return
 Pgdn::
 Pause
 return
-
+#Include Move.ahk
+#Include MahanMap.ahk
+#Include MahanPrevMap.ahk
+#Include SinsuHMap.ahk
