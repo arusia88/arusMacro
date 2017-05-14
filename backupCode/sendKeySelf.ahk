@@ -1,44 +1,36 @@
-#SingleInstance, force
+; #SingleInstance, force
+; gosub, sendDirectionKey
 
-#q::
-WinSetTitle,바람의나라,,target
-return
+; sendDirectionKey:
 
-#w::
-WinSetTitle,바람의나라,,self
-return
+; Loop {
+;     Sleep, 10
+;     if (GetKeystate("Left") = 1)
+;     {
+;         ControlSend, , {Left}, self
+;         break
+;     }
 
-gosub, sendDirectionKey
+;     if (GetKeystate("Right") = 1)
+;     {
+;         ControlSend, , {Right}, self
+;         break
+;     }
 
-sendDirectionKey:
-Loop {
-    Sleep, 10
-    if (GetKeystate("Left") = 1)
-    {
-        ControlSend, , {Left}, self
-        break
-    }
+;     if (GetKeystate("Up") = 1)
+;     {
+;         ControlSend, , {Up}, self
+;         break
+;     }
 
-    if (GetKeystate("Right") = 1)
-    {
-        ControlSend, , {Right}, self
-        break
-    }
+;     if (GetKeystate("Down") = 1)
+;     {
+;         ControlSend, , {Down}, self
+;         break
+;     }
+; }
 
-    if (GetKeystate("Up") = 1)
-    {
-        ControlSend, , {Up}, self
-        break
-    }
+; gosub, sendDirectionKey
 
-    if (GetKeystate("Down") = 1)
-    {
-        ControlSend, , {Down}, self
-        break
-    }
-    ControlSend,,{Esc}{3}{Home}{Enter},self
-    ControlSend,,{2},self
 
-}
-gosub, sendDirectionKey
-Return
+; Return
