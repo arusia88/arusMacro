@@ -45,9 +45,8 @@ if(ErrorLevel=0) {
                 Send {down}
                 Sleep 500
                 Send {enter}
-                Sleep 500
+                Sleep 50
                 Send {esc}
-                Sleep 1000
                 ;ºÏÂÊ 4 ÀÇ ÀÇ¹Ì
                 ÃÊ±âÈ­ = 0401
             }
@@ -62,12 +61,14 @@ if(ErrorLevel=0) {
     if(ÃÊ±âÈ­=0401) {
         Sleep, 200
         ÃÊ±âÈ­ = 0402
+        °¥X:=9, °¥Y:=26
+    }
+    if(XÁÂÇ¥=9 and YÁÂÇ¥=26){
         °¥X:=5, °¥Y:=19
     }
     if(XÁÂÇ¥=5 and YÁÂÇ¥=19){
         °¥X:=5, °¥Y:=7
     }
-
     if(XÁÂÇ¥=5 and YÁÂÇ¥=7){
         °¥X:=17, °¥Y:=7
     }

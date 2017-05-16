@@ -1,10 +1,23 @@
 ; <COMPILER: v1.0.48.5>
+
+#Include, MLib\Gdip_All.ahk
+#Include, MLib\Gdip_ImageSearch.ahk
+#Include, MLib\Bin2Hex.ahk
+#Include, MLib\BinRead.ahk
+#Include, MLib\Hex2Bin.ahk
+#Include, convertImgToPos.ahk
+
+
 #SingleInstance, force
+; #NoEnv
 CoordMode,Pixel,Screen
 DetectHiddenWindows On
-SetControlDelay -1
+SetKeyDelay, -1
+SetWinDelay,-1
+SetBatchLines,-1
+SetControlDelay,-1
 
-version = v0.1
+version = v1.1
 
 ; map info insert
 rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉
@@ -648,7 +661,8 @@ return
 Pgdn::
 Pause
 return
-#Include Move.ahk
-#Include MahanMap.ahk
-#Include MahanPrevMap.ahk
-#Include SinsuHMap.ahk
+
+#Include, Move.ahk
+#Include, MahanMap.ahk
+#Include, MahanPrevMap.ahk
+#Include, SinsuHMap.ahk
