@@ -78,23 +78,23 @@ convertImgToPos(x, y, z)
 
     pBitmap:=Gdip_BitmapFromScreen(string)
     if (z=1) {
-        ret := Gdip_SaveBitmapToFile(pBitmap,"expectedx1.bmp")
-        file = expectedx1.bmp
+        ret := Gdip_SaveBitmapToFile(pBitmap,"Img\expectedx1.bmp")
+        file = Img\expectedx1.bmp
     } else if (z=10) {
-        ret := Gdip_SaveBitmapToFile(pBitmap,"expectedx10.bmp")
-        file = expectedx10.bmp
+        ret := Gdip_SaveBitmapToFile(pBitmap,"Img\expectedx10.bmp")
+        file = Img\expectedx10.bmp
     } else if(z=100){
-        ret := Gdip_SaveBitmapToFile(pBitmap,"expectedx100.bmp")
-        file = expectedx100.bmp
+        ret := Gdip_SaveBitmapToFile(pBitmap,"Img\expectedx100.bmp")
+        file = Img\expectedx100.bmp
     } else if (z=2) {
-        ret := Gdip_SaveBitmapToFile(pBitmap,"expectedy2.bmp")
-        file = expectedy2.bmp
+        ret := Gdip_SaveBitmapToFile(pBitmap,"Img\expectedy2.bmp")
+        file = Img\expectedy2.bmp
     } else if(z=20) {
-        ret := Gdip_SaveBitmapToFile(pBitmap,"expectedy20.bmp")
-        file = expectedy20.bmp
+        ret := Gdip_SaveBitmapToFile(pBitmap,"Img\expectedy20.bmp")
+        file = Img\expectedy20.bmp
     } else if(z=200) {
-        ret := Gdip_SaveBitmapToFile(pBitmap,"expectedy200.bmp")
-        file = expectedy200.bmp
+        ret := Gdip_SaveBitmapToFile(pBitmap,"Img\expectedy200.bmp")
+        file = Img\expectedy200.bmp
     }
 
     BinRead(file, data)

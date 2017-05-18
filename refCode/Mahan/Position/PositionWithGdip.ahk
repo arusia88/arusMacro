@@ -8,7 +8,7 @@
 #SingleInstance, Force
 #NoEnv
 number = 0
-F3::
+F1::
 SetKeyDelay, -1
 SetWinDelay,-1
 SetBatchLines,-1
@@ -37,39 +37,36 @@ if(ErrorLevel=0) {
     MsgBox, bad
 }
 return
-F1::
-StartTime:=A_TickCount
-
-;#########################################################################################아래부분을 Code()로 구현 하시면 됩니다.
-X := convertImgToPos(범위X십a, 범위Y위)
-EndTime:=A_TickCount
-ResultTime:=EndTime - StartTime
-Msgbox, result = %ret% pos=%X% , Time=%ResultTime%
-
-
-
-;#########################################################################################
+; F2::
+; StartTime:=A_TickCount
+; ;#########################################################################################아래부분을 Code()로 구현 하시면 됩니다.
+; X := convertImgToPos(범위X십a, 범위Y위)
+; EndTime:=A_TickCount
+; ResultTime:=EndTime - StartTime
+; Msgbox, result = %ret% pos=%X% , Time=%ResultTime%
+; ;#########################################################################################
 
 
-return
+; return
 
 k:=1
-value:=0
-F4::
+value:=3
+F3::
 gdipToken := Gdip_Startup()
-string = %범위Y일a%|%범위Y위%|8|11
+PosX := X찾-516
+PosY := Y찾-736
+string = %PosX%|%PosY%|72|17
 MsgBox, %string%
 pBitmap:=Gdip_BitmapFromScreen(string)
-ret := Gdip_SaveBitmapToFile(pBitmap,"expected.bmp")
+ret := Gdip_SaveBitmapToFile(pBitmap, "pos.bmp")
 file = expected.bmp
 
 BinRead(file, data)
 Bin2Hex(resultHex,data,res)
 
-MsgBox, result : %resultHex%
-
-
-FileAppend, 자리 : %k% 값 : %value% 캡쳐 hex : %resultHex% `r, Test.txt
+; MsgBox, result : %resultHex%
+; FileAppend, 자리 : %k% 값 : %value% 캡쳐 hex : %resultHex% `r, Test.txt
 value += 1
+
 
 Return

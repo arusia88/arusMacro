@@ -5,7 +5,9 @@
 #Include, MLib\Bin2Hex.ahk
 #Include, MLib\BinRead.ahk
 #Include, MLib\Hex2Bin.ahk
+#Include, MLib\json.ahk
 #Include, convertImgToPos.ahk
+
 
 
 #SingleInstance, force
@@ -20,7 +22,7 @@ SetControlDelay,-1
 version = v1.1
 
 ; map info insert
-rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉
+rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉 일월마을
 StringSplit, MapList, rawMapList, %A_Space%
 Loop, %MapList0%
 {
@@ -54,14 +56,14 @@ Gui, Add, CheckBox, x36 y200 w40 h20 vsa1 checked, 공증
 Gui, Add, DropDownList, x76 y200 w40 vsb1 choose2, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, Slider, x126 y180 w80 h20 vSlider체력, 50
 Gui, Add, Slider, x126 y200 w80 h20 vSlider마력, 80
-Gui, Add, CheckBox, x36 y220 w40 h20 vsa3 checked, 헬파
+Gui, Add, CheckBox, x36 y220 w40 h20 vsa3, 헬파
 Gui, Add, DropDownList, x76 y220 w40 vsb3 choose6, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x36 y240 w40 h20 vsa4 checked, 성려
 Gui, Add, DropDownList, x76 y240 w40 vsb4 choose1, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x36 y260 w40 h20 vsa5 checked, '첨
 Gui, Add, DropDownList, x76 y260 w40 vsb5 choose7, 1|2|3|4|5|6|7|8|9|0
-Gui, Add, CheckBox, x36 y280 w40 h20 vsa6, 시폭
-Gui, Add, DropDownList, x76 y280 w40 vsb6 choose10, 1|2|3|4|5|6|7|8|9|0
+Gui, Add, CheckBox, x36 y280 w40 h20 vsa6 checked, 시폭
+Gui, Add, DropDownList, x76 y280 w40 vsb6 choose9, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y260 w40 h20 vsa7 checked, 혼
 Gui, Add, DropDownList, x166 y260 w40 vsb7 choose4, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y220 h20 v혼헬파 checked, 혼+헬파
@@ -75,7 +77,7 @@ Gui, Add, DropDownList, x76 y320 w40 vsb10 choose9, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y280 w68 h20 vc사슬 , 사슬
 Gui, Add, Edit, x196 y280 w15 h20 ve사슬 +Center, s
 Gui, Add, CheckBox, x126 y300 h20 v랜덤이동, 랜덤이동
-Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose1, %MapNameList%
+Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose4, %MapNameList%
 Gui, Add, CheckBox, x36 y340 h20 vDefenseHupung, 허풍선방지
 Gui, Add, CheckBox, x126 y340 h20 v축지, 축지사용(z)
 Gui, Add, Button, x226 y20 w55 h30 g시작, 시작
@@ -127,8 +129,6 @@ gosub, 재설정
 Loop{
     WinActivate, 바람의나라
     Gui, submit, nohide
-    ; Gosub 대기실부터던전
-    ; Gosub 위례부터대기실
     Gosub %selectedMap%
     Gosub 좌표
     Gosub 랜덤이동
@@ -175,8 +175,8 @@ if(sa10=1 and Cal_skillTimer2>5000 and Y좌표<=14){
 return
 성려:
 if(혼성려=1 and sa4=1 and sa7=1){
-    sj=5
-    Send, {esc}v{up}v%sj%%sb7%%sb4%{esc}
+
+    Send, {esc}v{up}v%sb7%%sb4%{esc}
 }
 if(혼성려=0 and sa4=1){
     Send, {esc}v{up}v%sb4%{esc}
@@ -516,18 +516,18 @@ if(랜덤이동=1){
     }
 }
 return
-Timer:
-Sec:=Floor((A_TickCount-Time)/1000)
-If Sec<60
-{
-    guicontrol,text,text1,%Sec%초
-}
-else
-{
-    Min:=Floor(Sec/60)
-    Sec2:=Mod(Sec,60)
-    guicontrol,text,text1, %Min%분 %Sec2%초
-}
+; Timer:
+; ; Sec:=Floor((A_TickCount-Time)/1000)
+; ; If Sec<60
+; ; {
+; ;     guicontrol,text,text1,%Sec%초
+; ; }
+; ; else
+; ; {
+; ;     Min:=Floor(Sec/60)
+; ;     Sec2:=Mod(Sec,60)
+; ;     guicontrol,text,text1, %Min%분 %Sec2%초
+; ; }
 return
 hupung:
 ImageSearch, X허, Y허, 450, 500, 800, 450, Img\hu.bmp
@@ -560,7 +560,7 @@ Time:=A_TickCount
 skillTimer1:=A_TickCount
 skillTimer2:=A_TickCount
 RandomTimer:=A_TickCount
-settimer,Timer,on
+; settimer,Timer,off
 guicontrol,text,text2,0바퀴
 환수행동력체크=0
 초기화=0
@@ -655,7 +655,8 @@ Gui,2: Add, Text, vGui2Text19 x10 y370 w200 h20 , -
 Gui,2: Add, Text, vGui2Text20 x10 y390 w200 h20 , -
 GUI,2:Show, w200 h150, 진행상황판
 return
-2guiclose:
+
+2Guiclose:
 gui,2:destroy
 return
 Pgdn::
@@ -663,6 +664,7 @@ Pause
 return
 
 #Include, Move.ahk
-#Include, MahanMap.ahk
-#Include, MahanPrevMap.ahk
-#Include, SinsuHMap.ahk
+#Include, Map\MahanMap.ahk
+#Include, Map\MahanPrevMap.ahk
+#Include, Map\SinsuHMap.ahk
+#Include, Map\ilwallMap.ahk

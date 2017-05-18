@@ -26,11 +26,24 @@ if(갈X<X좌표){
     ControlSend,, {Left},ahk_class Nexon.NWind
     Sleep 50
 }
-Gosub, 기원
+; Gosub, 기원
 ; MsgBox, 가야할X, 갈X %갈X% 가야할Y, 갈Y %갈Y% 현X, 현X %X좌표% 현Y, 현Y %Y좌표%초기화값, 값 %초기화%
 guicontrol, 2:text,가야할X, 갈X %갈X%
 guicontrol, 2:text,가야할Y, 갈Y %갈Y%
 guicontrol, 2:text,현X, 현X %X좌표%
 guicontrol, 2:text,현Y, 현Y %Y좌표%
 guicontrol, 2:text,초기화값, 값 %초기화%
+return
+F3::
+FileAppend, %X좌표%`,%Y좌표% `r, Pos.txt
+return
+F4::
+gdipToken := Gdip_Startup()
+PosX := X찾-516
+PosY := Y찾-736
+string = %PosX%|%PosY%|72|17
+MsgBox, %string%
+pBitmap:=Gdip_BitmapFromScreen(string)
+ret := Gdip_SaveBitmapToFile(pBitmap, "pos.bmp")
+file = expected.bmp
 return
