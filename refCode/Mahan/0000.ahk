@@ -144,7 +144,7 @@ Gosub ±â¿ø
 Gosub ¸í»ó
 return
 ¸÷ÀÎ½Ä:
-ImageSearch, x¸÷, y¸÷, 30, 70, 820, 750, *TransFFFFFF *80 Img\mahanMob.bmp
+ImageSearch, x¸÷, y¸÷, 30, 70, 820, 750, *TransFFFFFF *80 Img\mahanmob.bmp
 if(ErrorLevel=0){
     Gosub, °øÁõ
     Gosub, ÀüÃ¼
