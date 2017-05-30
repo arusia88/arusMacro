@@ -1,46 +1,49 @@
 #SingleInstance, force
 CoordMode,Pixel,Screen
 
-e::
-SetTimer, attackAll, 500
-return
-
-r::
-ControlSend, , {Esc}, target
-SetTimer, attackAll, Off
-return
-
 t::
-SetTimer, sendDirectionKey, 0
+ControlSend, , {Esc}, ahk_class Nexon.NWind
+SetTimer, attackAll, On
+; ControlSend, , {Esc}, target
+; SetTimer, healSelf, On
 return
-
-
 y::
-gosub, moveAuto
-Return
+SetTimer, attackAll, Off
+ControlSend, ,{Esc}, ahk_class Nexon.NWind
+; ControlSend, , {Esc}, target
+; SetTimer, healSelf, Off
+return
+; r::
+; SetTimer, sendDirectionKey, 0
+; return
 
-#q::
-WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,target
+
+; y::
+; gosub, moveAuto
+; Return
+
+F1::
+WinSetTitle,ë°”ëŒì˜ë‚˜ë¼,,target
 return
-#z::
-WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,self
+F2::
+WinSetTitle,ë°”ëŒì˜ë‚˜ë¼,,self
 return
-#w::
-WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,self2
+F3::
+WinSetTitle,self2,,self
 return
 
-w::
-ControlSend, , {Up}, self
-Return
-a::
-ControlSend, , {Left}, self
-Return
-s::
-ControlSend, , {Down} , self
-Return
-d::
-ControlSend, , {Right} , self
-Return
+; w::
+; ControlSend, , {Up}, self
+; Return
+; a::
+; ControlSend, , {Left}, self
+; Return
+; s::
+; ControlSend, , {Down} , self
+; Return
+; d::
+; ControlSend, , {Right} , self
+; Return
 
 moveAuto:
 Loop {
@@ -96,23 +99,33 @@ Return
 
 attackMagic = 0
 debufMagic = 5
-
+ing = 0
 attackAll:
-ControlSend, , {2}, target
-ControlSend, , {5}, target
-Sleep, 100
-
-ControlSend, , {Up}, target
-; WinGetPos, findTargetX, findTargetY, findTargetWidth, findTargetHeight, target
-; ImageSearch, OutputVarX, OutputVarY, findTargetX, findTargetY, findTargetX+400, findTargetY+400, *80 resources/sinsugeobuk.bmp
-; if ErrorLevel=0
-; {
-    ControlSend, , {Enter}, target
-    Sleep, 50
-    ControlSend, , {0}, target
-    Sleep, 50
-    ControlSend, , {Enter}, target
-    Sleep, 50
-
-; }
+; ControlSend, , {2}, target
+if(ing = 0){
+    ing:=1
+    ControlSend, , {1}, ahk_class Nexon.NWind
+    Sleep, 200
+    ControlSend, , {Up}, ahk_class Nexon.NWind
+    Sleep, 200
+    ControlSend, , {Enter}, ahk_class Nexon.NWind
+    Sleep, 200
+}
+ing = 0
 Return
+
+healSelf:
+if(setSelf = 0){
+    ControlSend, , {tab}{home}, self
+    Sleep, 1000
+    ControlSend, , {tab}, self
+    setSelf = 1
+    return
+}
+ControlSend, , 2, self
+Sleep, 100
+ControlSend, , 3, self
+Sleep, 50
+ControlSend, , 3, self
+Sleep, 50
+ControlSend, , 3, self

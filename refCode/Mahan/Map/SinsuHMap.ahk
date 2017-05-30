@@ -8,7 +8,7 @@ t=(%buffer%)
 
 Loop {
     gosub, 신수계부터현무봉좌표
-    Gosub, 좌표
+    Gosub, 이동
     Gosub, 랜덤이동
     if(초기화=0411){
         break

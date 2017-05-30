@@ -7,13 +7,14 @@
 
 #SingleInstance, Force
 #NoEnv
+CoordMode, Pixel, Screen
 number = 0
 F1::
 SetKeyDelay, -1
 SetWinDelay,-1
 SetBatchLines,-1
 SetControlDelay,-1
-CoordMode, Pixel, SCreen
+
 
 WinGetPos, findSelfX, findSelfY, findSelfWidth, findSelfHeight, 바람의나라
 ImageSearch, X찾, Y찾, findSelfX+880, findSelfY+750, findSelfX+findSelfWidth, findSelfY+findSelfHeight, *transFFFFFF Img\X.bmp
@@ -67,6 +68,85 @@ Bin2Hex(resultHex,data,res)
 ; MsgBox, result : %resultHex%
 ; FileAppend, 자리 : %k% 값 : %value% 캡쳐 hex : %resultHex% `r, Test.txt
 value += 1
-
-
 Return
+
+
+F9::
+
+; get capture heopung image
+; BlockInput, On
+WinGetPos, findSelfX, findSelfY, findSelfWidth, findSelfHeight, 제목 없음 - 그림판
+
+gdipToken := Gdip_Startup()
+ImageSearch, X찾, Y찾, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+findSelfHeight, *transFFFFFF *50 Img\heopung.bmp
+If(ErrorLevel = 0)
+{
+    string = %X찾%|%Y찾%|276|198
+    pBitmap:=Gdip_BitmapFromScreen(string)
+    ret := Gdip_SaveBitmapToFile(pBitmap, "pos.bmp")
+
+    ; set clipboard to cpature image
+    Gdip_SetBitmapToClipboard(pBitmap)
+
+    ; control send 'ctrl + v ' on kakao (me)
+    ; control send enter
+    WinActivate 임군
+    ControlSend, ,{CtrlDown}v{CtrlUp},임군
+    Sleep, 300
+    ; Send, {Enter}
+    Sleep, 300
+    ; WinActivate 바람의나라
+    ; BlockInput, Off
+}
+; active wind back
+return
+
+F4::
+#Persistent
+SetTimer, ConText
+
+ConText:
+DetectHiddenText, On
+MouseGetPos,,, id, NN
+ControlGetText, Text, %NN%, ahk_id %id%
+Tooltip Text=%Text%
+Return
+
+
+F5::
+; CoordMode, Mouse, Screen
+; WinGetPos, findKaKaoX, findKaKaoY, findKaKaoWidth, findKaKaoHeight, 임군
+; WinActivate 임군
+; ImageSearch, Xreply, Yreply, findKaKaoX+114, findKaKaoY+452, findKaKaoX+findKaKaoWidth, findKaKaoY+findKaKaoHeight, *transFFFFFF Img\replyKaKao.bmp
+; If(ErrorLevel = 0)
+; {
+;     MsgBox, success
+;     Sleep, 300
+;     Xreply := Xreply+45
+;     Yreply := Yreply+15
+;     ; ControlClick, x%Xreply% y%Yreply%,임군,, Left, 2
+;     MouseClick, Left, %Xreply%, %Yreply%, 2
+;     Send, {CtrlDown}c{CtrlUp}
+;     Sleep, 1000
+;     ; MsgBox % Xreply " / " Yreply
+;     ; Sleep, 500
+;     Send, {CtrlDown}v{CtrlUp}
+;     ; Sleep, 300
+;     ; Send, {Enter}
+;     ; Sleep, 300
+;     ; heopungSent = 0
+; }
+
+    CoordMode, Mouse, Screen
+    WinGetPos, findKaKaoX, findKaKaoY, findKaKaoWidth, findKaKaoHeight, 임군
+    ImageSearch, Xreply, Yreply, findKaKaoX+114, findKaKaoY+452, findKaKaoX+findKaKaoWidth, findKaKaoY+findKaKaoHeight, *transFFFFFF *80 Img\replyKaKao.bmp
+    If(ErrorLevel = 0)
+    {
+        Xreply := Xreply+45
+        Yreply := Yreply+15
+        MouseClick, Left, %Xreply%, %Yreply%, 2
+        Sleep, 100
+        Send, {CtrlDown}c{CtrlUp}
+        Sleep, 100
+        ; WinActivate 바람의나라
+    }

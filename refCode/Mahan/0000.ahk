@@ -7,9 +7,6 @@
 #Include, MLib\Hex2Bin.ahk
 #Include, MLib\json.ahk
 #Include, convertImgToPos.ahk
-
-
-
 #SingleInstance, force
 ; #NoEnv
 CoordMode,Pixel,Screen
@@ -22,7 +19,7 @@ SetControlDelay,-1
 version = v1.1
 
 ; map info insert
-rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉 일월마을
+rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉 일월마을 폐허대로 선비족 관미동
 StringSplit, MapList, rawMapList, %A_Space%
 Loop, %MapList0%
 {
@@ -40,13 +37,13 @@ Gui, Add, GroupBox, x26 y20 w190 h110 +Center, 42억일때 할 행동(경변십억d)
 Gui, Add, Radio, x36 y40 h20 v영혼체력, 영혼사(체력)
 Gui, Add, Radio, x36 y60 h20 v영혼마력, 영혼사(마력)
 Gui, Add, Radio, x130 y40 h20 v십, 십억경
-Gui, Add, Radio, x130 y60 h20 v중 checked, 일시정지
+Gui, Add, Radio, x130 y60 h20 v중, 일시정지
 Gui, Add, Radio, x36 y80 h20 v경체, 경변(체력)
 Gui, Add, Radio, x36 y100 h20 v경마, 경변(마력)
-Gui, Add, Radio, x130 y80 h20 , 계속돌기
+Gui, Add, Radio, x130 y80 h20 checked, 계속돌기
 Gui, Add, Text, x126 y103 h20 CBlue, 변환횟수
 Gui, Add, Edit, x180 y100 w20 h20 v변환횟수, 4
-Gui, Add, GroupBox, x26 y140 w190 h230 , Arus전용사냥매크로
+Gui, Add, GroupBox, x26 y140 w190 h250 , Arus전용사냥매크로
 Gui, Add, CheckBox, x36 y160 w40 h20 vArm1 checked, 보무
 Gui, Add, Edit, x76 y160 w20 h20 vArm2, q
 Gui, Add, Edit, x96 y160 w20 h20 vArm3, w
@@ -56,7 +53,7 @@ Gui, Add, CheckBox, x36 y200 w40 h20 vsa1 checked, 공증
 Gui, Add, DropDownList, x76 y200 w40 vsb1 choose2, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, Slider, x126 y180 w80 h20 vSlider체력, 50
 Gui, Add, Slider, x126 y200 w80 h20 vSlider마력, 80
-Gui, Add, CheckBox, x36 y220 w40 h20 vsa3, 헬파
+Gui, Add, CheckBox, x36 y220 w40 h20 vsa3 checked, 헬파
 Gui, Add, DropDownList, x76 y220 w40 vsb3 choose6, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x36 y240 w40 h20 vsa4 checked, 성려
 Gui, Add, DropDownList, x76 y240 w40 vsb4 choose1, 1|2|3|4|5|6|7|8|9|0
@@ -68,18 +65,21 @@ Gui, Add, CheckBox, x126 y260 w40 h20 vsa7 checked, 혼
 Gui, Add, DropDownList, x166 y260 w40 vsb7 choose4, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y220 h20 v혼헬파 checked, 혼+헬파
 Gui, Add, CheckBox, x126 y240 h20 v혼성려 checked, 혼+성려
-Gui, Add, CheckBox, x126 y160 w40 h20 vsa8, 명상
-Gui, Add, DropDownList, x166 y160 w40 vsb8 choose7, 1|2|3|4|5|6|7|8|9|0
+Gui, Add, CheckBox, x126 y160 w40 h20 vsa8 checked, 명상
+Gui, Add, DropDownList, x166 y160 w40 vsb8 choose5, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x36 y300 w40 h20 vsa9, 지폭
 Gui, Add, DropDownList, x76 y300 w40 vsb9 choose8, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x36 y320 w40 h20 vsa10, 폭류
-Gui, Add, DropDownList, x76 y320 w40 vsb10 choose9, 1|2|3|4|5|6|7|8|9|0
-Gui, Add, CheckBox, x126 y280 w68 h20 vc사슬 , 사슬
+Gui, Add, DropDownList, x76 y320 w40 vsb10 choose10, 1|2|3|4|5|6|7|8|9|0
+Gui, Add, CheckBox, x126 y280 w68 h20 vc사슬 checked, 사슬
 Gui, Add, Edit, x196 y280 w15 h20 ve사슬 +Center, s
 Gui, Add, CheckBox, x126 y300 h20 v랜덤이동, 랜덤이동
-Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose4, %MapNameList%
+Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose7, %MapNameList%
 Gui, Add, CheckBox, x36 y340 h20 vDefenseHupung, 허풍선방지
+Gui, Add, CheckBox, x36 y360 h20 vsm checked, 마방
+Gui, Add, Edit, x76 y360 w15 h20 vsmNum +Center, i
 Gui, Add, CheckBox, x126 y340 h20 v축지, 축지사용(z)
+Gui, Add, CheckBox, x126 y360 h20 v초상, 초상사용(x)
 Gui, Add, Button, x226 y20 w55 h30 g시작, 시작
 Gui, Add, Button, x281 y20 w55 h30 g설치, 설치
 Gui, Add, Button, x336 y20 w55 h30 g재설정, 재설정
@@ -117,7 +117,7 @@ Gui, Add, Text, x236 y293 w20 h20 CBlue, ID
 Gui, Add, Text, x236 y313 w20 h20 CBlue, PW
 Gui, Add, Edit, x256 y290 w60 h20 +disabled, 아이디
 Gui, Add, Edit, x256 y310 w60 h20 +disabled, 비밀번호
-Gui, Show, xCenter yCenter h400 w420, DM 마한
+Gui, Show, xCenter yCenter h420 w420, Arus Script
 Gosub, 성능향상
 return
 테스트용:
@@ -125,27 +125,38 @@ Gosub, 재설정
 시작:
 GuiControl, Disable, 시작
 RandomTimer:=A_TickCount
+moveTimer := A_TickCount
 gosub, 재설정
+settimer,Timer,On
 Loop{
-    WinActivate, 바람의나라
     Gui, submit, nohide
+    Gosub heopung
     Gosub %selectedMap%
-    Gosub 좌표
+    Gosub 이동
     Gosub 랜덤이동
     Gosub 버프
     Gosub 몹인식
-    Gosub hupung
+
 }
 return
 버프:
 Gosub 보무
-Gosub 공증
-Gosub 기원
 Gosub 명상
+Gosub 마방
 return
+
+isMop() {
+    global
+    ImageSearch, x몹, y몹, findSelfX, findSelfY, findSelfX+811, findSelfY+615, Img\mob.bmp
+    if(ErrorLevel=0){
+        return 1
+    } else {
+        return 0
+    }
+}
+
 몹인식:
-ImageSearch, x몹, y몹, 30, 70, 820, 750, *TransFFFFFF *80 Img\mahanMob.bmp
-if(ErrorLevel=0){
+if(isMop() == 1){
     Gosub, 공증
     Gosub, 전체
     Gosub, 기원
@@ -158,51 +169,62 @@ if(ErrorLevel=0){
 return
 첨:
 if(sa5=1){
-    Send %sb5%
+   ControlSend,,%sb5%,ahk_class Nexon.NWind
+}
+return
+마방:
+if(sm=1){
+    ImageSearch, x마방, y마방, findSelfX, findSelfY, findSelfX+400, findSelfY+800, *transFFFFFF Img\madefence.bmp
+    if(ErrorLevel = 0) {
+        ; already buf taken
+    } else {
+        ControlSend,,{Shift down}z{Shift up}%smNum%,ahk_class Nexon.NWind
+        Sleep, 5000
+    }
 }
 return
 전체:
 Cal_skillTimer1:=A_TickCount-skillTimer1
 Cal_skillTimer2:=A_TickCount-skillTimer2
-if(sa9=1 and Cal_skillTimer1>5000 and Y좌표<=14){
-    Send %sb9%
+if(sa9=1 and Cal_skillTimer1>5000){
+   ControlSend,,%sb9%,ahk_class Nexon.NWind
     skillTimer1:=A_TickCount
 }
-if(sa10=1 and Cal_skillTimer2>5000 and Y좌표<=14){
-    Send %sb10%
+if(sa10=1 and Cal_skillTimer2>5000){
+   ControlSend,,%sb10%,ahk_class Nexon.NWind
     skillTimer2:=A_TickCount
 }
 return
 성려:
 if(혼성려=1 and sa4=1 and sa7=1){
 
-    Send, {esc}v{up}v%sb7%%sb4%{esc}
+   ControlSend,, {esc}v{up}v%sb7%%sb4%{esc},ahk_class Nexon.NWind
 }
 if(혼성려=0 and sa4=1){
-    Send, {esc}v{up}v%sb4%{esc}
+   ControlSend,, {esc}v{up}v%sb4%{esc},ahk_class Nexon.NWind
 }
 return
 헬파:
 if(혼헬파=1 and sa3=1 and sa7=1 and 헬Count>=5){
-    Send, {esc}v{home}{down}v%sb7%%sb3%{esc}
+   ControlSend,, {esc}v{home}{down}v%sb7%%sb3%{esc},ahk_class Nexon.NWind
     헬Count=0
 }
 if(혼헬파=0 and sa3=1 and 헬Count>=10){
-    Send, {esc}v{home}{down}v%sb3%{esc}
+   ControlSend,, {esc}v{home}{down}v%sb3%{esc},ahk_class Nexon.NWind
     헬Count=0
 }
 헬Count++
 return
 사슬:
 if(c사슬=1 and sa7=1 and 살Count>=30){
-    Send, {esc}v{home}{%LoR%}v%d혼%%e사슬%{esc}
+   ControlSend,,{Shift down}z{Shift up}%e사슬%{Up}{enter},ahk_class Nexon.NWind
     살Count=0
-    sleep 1000
+    sleep 3000
 }
 if(c사슬=1 and c혼=0 and 살Count>=30){
-    Send, {esc}v{home}{%LoR%}%e사슬%{esc}
+   ControlSend,,{Shift down}z{Shift up}%e사슬%{Up}{enter},ahk_class Nexon.NWind
     살Count=0
-    sleep 1000
+    sleep 3000
 }
 살Count++
 return
@@ -211,14 +233,14 @@ if(Arm1=1){
     ImageSearch, x보, y보, 20, 70, 900, 600, *80 Img\bufb.bmp
     if(ErrorLevel=1){
         Loop, 1{
-            Send {Shift down}z{Shift up}%arm2%{enter}
+           ControlSend,,{Shift down}z{Shift up}%arm2%{enter},ahk_class Nexon.NWind
             break
         }
     }
     ImageSearch, x무, y무, 20, 70, 900, 600, *80 Img\bufm.bmp
     if(ErrorLevel=1){
         Loop, 1{
-            Send {Shift down}z{Shift up}%arm3%{enter}
+           ControlSend,,{Shift down}z{Shift up}%arm3%{enter},ahk_class Nexon.NWind
             Sleep 2000
             break
         }
@@ -233,7 +255,7 @@ if(sa1=1){
         범위SP:=범위X체a+(100-Slider마력)
         ImageSearch, xx, yy, %범위SP%, %범위Y마%, %범위SP%, %범위Y마%, *80 Img\spcolor.bmp
         if(ErrorLevel=1){
-            SendInput, %sb1%
+            ControlSend,,%sb1%,ahk_class Nexon.NWind
             Sleep 100
         }
     ; }
@@ -247,7 +269,7 @@ if(sa2=1){
     ImageSearch, xx, yy, %범위HP%, %범위Y체%, %범위HP%+10, %범위Y체%+10, *50 Img\hpcolor.bmp
     if(ErrorLevel=1){
         ; MsgBox, use heal magic
-        SendInput, {esc}%sb2%{home}{enter}
+        ControlSend,,{esc}%sb2%{home}{enter},ahk_class Nexon.NWind
         Sleep 100
     }
 }
@@ -256,16 +278,16 @@ return
 if(sa6=1){
     Random, explotionRand, 1, 4
     if(explotionRand=1){
-        Send {Shift down}{up}{Shift up}%sb6%
+       ControlSend,,{Shift down}{up}{Shift up}%sb6%,ahk_class Nexon.NWind
     }
     if(explotionRand=2){
-        Send {Shift down}{down}{Shift up}%sb6%
+       ControlSend,,{Shift down}{down}{Shift up}%sb6%,ahk_class Nexon.NWind
     }
     if(explotionRand=3){
-        Send {Shift down}{left}{Shift up}%sb6%
+       ControlSend,,{Shift down}{left}{Shift up}%sb6%,ahk_class Nexon.NWind
     }
     if(explotionRand=4){
-        Send {Shift down}{right}{Shift up}%sb6%
+       ControlSend,,{Shift down}{right}{Shift up}%sb6%,ahk_class Nexon.NWind
     }
 }
 return
@@ -275,7 +297,7 @@ if(sa8=1){
     if(ErrorLevel=1){
         Loop, 1{
             Sleep 300
-            Send %sb8%
+           ControlSend,,%sb8%,ahk_class Nexon.NWind
             sleep 2000
             Break
         }
@@ -305,64 +327,64 @@ if(ErrorLevel=0)
         }
         if(십=1){
             Loop, %변환횟수%{
-                send u
-                send d
+               ControlSend,,u,ahk_class Nexon.NWind
+               ControlSend,,d,ahk_class Nexon.NWind
                 sleep 800
-                send {Down}
+               ControlSend,,{Down},ahk_class Nexon.NWind
                 sleep 800
-                send {Enter}
+               ControlSend,,{Enter},ahk_class Nexon.NWind
                 Sleep 800
-                Send {esc}
+               ControlSend,,{esc},ahk_class Nexon.NWind
                 Sleep 1000
             }
         }
         if(경체=1){
             Loop, %변환횟수%{
-                Send ud
+               ControlSend,,ud,ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {Enter}
+               ControlSend,,{Enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {down}
+               ControlSend,,{down},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {down}
+               ControlSend,,{down},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {esc}
+               ControlSend,,{esc},ahk_class Nexon.NWind
                 Sleep 1000
             }
         }
         if(경마=1){
             Loop, %변환횟수%{
-                Send ud
+               ControlSend,,ud,ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {Enter}
+               ControlSend,,{Enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {down}
+               ControlSend,,{down},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {down}
+               ControlSend,,{down},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {down}
+               ControlSend,,{down},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {enter}
+               ControlSend,,{enter},ahk_class Nexon.NWind
                 Sleep 1000
-                Send {esc}
+               ControlSend,,{esc},ahk_class Nexon.NWind
                 Sleep 1000
             }
         }
@@ -375,21 +397,21 @@ if(환수체크=0){
     Loop, 1{
         if(HwanCheck=1){
             Loop, %Summoncount% {
-                Send, {Ctrl down}/{Ctrl up}
+               ControlSend,, {Ctrl down}/{Ctrl up},ahk_class Nexon.NWind
                 Sleep 400
-                Send {esc}
+               ControlSend,, {esc},ahk_class Nexon.NWind
             }
         }
-        Send {enter}{esc}
+       ControlSend,,{enter}{esc},ahk_class Nexon.NWind
         Sleep 500
-        Send {enter}{esc}
+       ControlSend,,{enter}{esc},ahk_class Nexon.NWind
         if(축지=1){
             Sleep 200
-            Send uz
+           ControlSend,,uz,ahk_class Nexon.NWind
             Sleep 300
-            Send {ctrl down}{up}{ctrl up}{enter}
+           ControlSend,,{ctrl down}{up}{ctrl up}{enter},ahk_class Nexon.NWind
             Sleep 200
-            Send {enter}{esc}
+           ControlSend,,{enter}{esc},ahk_class Nexon.NWind
         }
         환수체크=1
         break
@@ -401,7 +423,7 @@ if(환수귀환체크=0){
     if(Hwanreturn=1){
         sleep 1000
         clipboard = 환수 귀환
-        Send '{ctrl down}v{ctrl up}{enter}
+       ControlSend,,'{ctrl down}v{ctrl up}{enter},ahk_class Nexon.NWind
         sleep 200
         환수귀환체크=1
     }
@@ -413,11 +435,11 @@ if(환수행동력체크=0){
         ImageSearch, x환수1, y환수1, %x환1%, %환1Y1%, %x환2%, %환1Y2%, Img\hwanwork.bmp
         if(ErrorLevel=0){
             clipboard = %HwanB1%
-            Send, ui
+           ControlSend,, ui,ahk_class Nexon.NWind
             Sleep 800
-            Send, {Ctrl down}v{Ctrl up}{enter}
+           ControlSend,, {Ctrl down}v{Ctrl up}{enter},ahk_class Nexon.NWind
             Sleep 500
-            Send, {esc}
+           ControlSend,, {esc},ahk_class Nexon.NWind
             Sleep 200
         }
     }
@@ -425,11 +447,11 @@ if(환수행동력체크=0){
         ImageSearch, x환수2, y환수2, %x환1%, %환2Y1%, %x환2%, %환2Y2%, Img\Hwanwork.bmp
         if(ErrorLevel=0){
             clipboard = %HwanB2%
-            Send, ui
+           ControlSend,, ui,ahk_class Nexon.NWind
             Sleep 800
-            Send, {Ctrl down}v{Ctrl up}{enter}
+           ControlSend,, {Ctrl down}v{Ctrl up}{enter},ahk_class Nexon.NWind
             Sleep 500
-            Send, {esc}
+           ControlSend,, {esc},ahk_class Nexon.NWind
             Sleep 200
         }
     }
@@ -437,11 +459,11 @@ if(환수행동력체크=0){
         ImageSearch, x환수3, y환수3, %x환1%, %환3Y1%, %x환2%, %환3Y2%, Img\Hwanwork.bmp
         if(ErrorLevel=0){
             clipboard = %HwanB3%
-            Send, ui
+           ControlSend,, ui,ahk_class Nexon.NWind
             Sleep 800
-            Send, {Ctrl down}v{Ctrl up}{enter}
+           ControlSend,, {Ctrl down}v{Ctrl up}{enter},ahk_class Nexon.NWind
             Sleep 500
-            Send, {esc}
+           ControlSend,, {esc},ahk_class Nexon.NWind
             Sleep 200
         }
     }
@@ -449,11 +471,11 @@ if(환수행동력체크=0){
         ImageSearch, x환수4, y환수4, %x환1%, %환4Y1%, %x환2%, %환4Y2%, Img\Hwanwork.bmp
         if(ErrorLevel=0){
             clipboard = %HwanB4%
-            Send, ui
+           ControlSend,, ui,ahk_class Nexon.NWind
             Sleep 800
-            Send, {Ctrl down}v{Ctrl up}{enter}
+           ControlSend,, {Ctrl down}v{Ctrl up}{enter},ahk_class Nexon.NWind
             Sleep 500
-            Send, {esc}
+           ControlSend,, {esc},ahk_class Nexon.NWind
             Sleep 200
         }
     }
@@ -465,7 +487,7 @@ return
 if(허풍선방지체크=0){
     if(DefenseHupung=1){
         Loop{
-            ImageSearch, xHu, yHu, 1, 1, 800, 600, *TransFFFFFF *80 Img\mahanmob.bmp
+            ImageSearch, xHu, yHu, findSelfX, findSelfY, findSelfX+811, findSelfY+615, Img\mob.bmp
             if(ErrorLevel=0){
                 Gosub, 몹인식
                 Gosub, 버프
@@ -487,63 +509,21 @@ if(바퀴초기화=0){
     바퀴초기화=1
 }
 
-랜덤이동:
-if(랜덤이동=1){
-    Cal_RandomTimer:=A_TickCount-RandomTimer
-    if(Cal_RandomTimer<1000){
-        이전X좌표=%X좌표%
-        이전Y좌표=%Y좌표%
-    }
-    if(Cal_RandomTimer>3000){
-        현재X좌표=%X좌표%
-        현재Y좌표=%Y좌표%
-        if(이전X좌표=현재X좌표 and 이전Y좌표=현재Y좌표){
-            Random, RandWalk, 1, 4
-            if(RandWalk=1){
-                ControlSend,, {right},ahk_class Nexon.NWind
-            }
-            if(RandWalk=2){
-                ControlSend,, {Left},ahk_class Nexon.NWind
-            }
-            if(RandWalk=3){
-                ControlSend,, {down},ahk_class Nexon.NWind
-            }
-            if(RandWalk=4){
-                ControlSend,, {up},ahk_class Nexon.NWind
-            }
-        }
-        RandomTimer:=A_TickCount
-    }
+
+Timer:
+Sec:=Floor((A_TickCount-Time)/1000)
+If Sec<60
+{
+    guicontrol,text,text1,%Sec%초
+}
+else
+{
+    Min:=Floor(Sec/60)
+    Sec2:=Mod(Sec,60)
+    guicontrol,text,text1, %Min%분 %Sec2%초
 }
 return
-; Timer:
-; ; Sec:=Floor((A_TickCount-Time)/1000)
-; ; If Sec<60
-; ; {
-; ;     guicontrol,text,text1,%Sec%초
-; ; }
-; ; else
-; ; {
-; ;     Min:=Floor(Sec/60)
-; ;     Sec2:=Mod(Sec,60)
-; ;     guicontrol,text,text1, %Min%분 %Sec2%초
-; ; }
-return
-hupung:
-ImageSearch, X허, Y허, 450, 500, 800, 450, Img\hu.bmp
-if(ErrorLevel=0){
-    if(알림음=1){
-        soundplay Img\QUERY.wav
-    }
-    if(바람종료=1){
-        WinActivate 바람의나라
-        Sleep 1000
-        Send {Alt down}{F4}{Alt up}
-        Sleep 1000
-    }
-}
-Sleep 10
-return
+
 GuiClose:
 ExitApp
 설명서:
@@ -552,6 +532,9 @@ return
 Pgup::
 재설정:
 WinActivate, 바람의나라
+filenum = 0
+heopungSent = 0
+completedReply = 0
 Slider체력=70
 헬Count=0
 살Count=0
@@ -560,7 +543,7 @@ Time:=A_TickCount
 skillTimer1:=A_TickCount
 skillTimer2:=A_TickCount
 RandomTimer:=A_TickCount
-; settimer,Timer,off
+settimer,Timer,off
 guicontrol,text,text2,0바퀴
 환수행동력체크=0
 초기화=0
@@ -568,7 +551,7 @@ guicontrol,text,text2,0바퀴
 Sleep 2000
 ImageSearch, X1, Y1, 800, 100, 950, 300, Img\Hwansu.bmp
 if(ErrorLevel=1){
-    Send p
+   ControlSend,,p,ahk_class Nexon.NWind
 }
 WinGetPos, findSelfX, findSelfY, findSelfWidth, findSelfHeight, 바람의나라
 ImageSearch, X찾, Y찾, findSelfX+880, findSelfY+750, findSelfX+findSelfWidth, findSelfY+findSelfHeight, *transFFFFFF *80 Img\X.bmp
@@ -662,9 +645,12 @@ return
 Pgdn::
 Pause
 return
-
+#Include, Heopung.ahk
 #Include, Move.ahk
 #Include, Map\MahanMap.ahk
 #Include, Map\MahanPrevMap.ahk
 #Include, Map\SinsuHMap.ahk
 #Include, Map\ilwallMap.ahk
+#Include, Map\ruinMap.ahk
+#Include, Map\sunbiMap.ahk
+#Include, Map\kwanmiMap.ahk

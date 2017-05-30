@@ -1,5 +1,18 @@
-좌표:
+moveByChosang(directionKey) {
+    if(isMop() = 1){
+         return
+    }
+    ControlSend, , {Esc}, Nexon.NWind
+    Sleep, 200
+    ControlSend, , {ShiftDown}{%directionKey%}{ShiftUp}, ahk_class Nexon.NWind
+    Sleep, 200
+    ControlSend, , ux, ahk_class Nexon.NWind
+    Sleep, 200
 
+}
+
+
+이동:
 X백 := convertImgToPos(범위X백a, 범위Y위, 100)
 X십 := convertImgToPos(범위X십a, 범위Y위, 10)
 X일 := convertImgToPos(범위X일a, 범위Y위, 1)
@@ -8,8 +21,34 @@ Y백 := convertImgToPos(범위Y백a, 범위Y위, 200)
 Y십 := convertImgToPos(범위Y십a, 범위Y위, 20)
 Y일 := convertImgToPos(범위Y일a, 범위Y위, 2)
 
+
 X좌표:=(X백*100)+(X십*10)+(X일)
 Y좌표:=(Y백*100)+(Y십*10)+(Y일)
+
+; if(prevX = X좌표 and prevY = Y좌표) {
+;     MouseClick, Left, 430, 350, 1
+;     Sleep, 3000
+; }
+
+; TODO: 같은자리 있으면 넘어감
+; cal_moveTimer:=A_TickCount-moveTimer
+; if(cal_moveTimer > 10000 ){
+;     prevX := X좌표, prevY := Y좌표
+;     moveTimer := A_TickCount
+; }
+
+if(초상 = 1){
+    if(갈Y - Y좌표 > 5) {
+        moveByChosang("Down")
+    } else if (갈Y - Y좌표 < -5) {
+        moveByChosang("Up")
+    } else if (갈X - X좌표 > 5) {
+        moveByChosang("Right")
+    } else if (갈X - X좌표 < -5) {
+        moveByChosang("Left")
+    }
+}
+
 if(갈Y>Y좌표){
     ControlSend,, {down},ahk_class Nexon.NWind
     Sleep 50
@@ -26,7 +65,14 @@ if(갈X<X좌표){
     ControlSend,, {Left},ahk_class Nexon.NWind
     Sleep 50
 }
+
+
+
 ; Gosub, 기원
+
+;; At kwanmi, it is not needed because it is instance field
+; Gosub, heopung
+
 ; MsgBox, 가야할X, 갈X %갈X% 가야할Y, 갈Y %갈Y% 현X, 현X %X좌표% 현Y, 현Y %Y좌표%초기화값, 값 %초기화%
 guicontrol, 2:text,가야할X, 갈X %갈X%
 guicontrol, 2:text,가야할Y, 갈Y %갈Y%
@@ -34,16 +80,54 @@ guicontrol, 2:text,현X, 현X %X좌표%
 guicontrol, 2:text,현Y, 현Y %Y좌표%
 guicontrol, 2:text,초기화값, 값 %초기화%
 return
+
+랜덤이동:
+if(랜덤이동=1){
+    Cal_RandomTimer:=A_TickCount-RandomTimer
+    if(Cal_RandomTimer<1000){
+        이전X좌표=%X좌표%
+        이전Y좌표=%Y좌표%
+    }
+    if(Cal_RandomTimer>3000){
+        현재X좌표=%X좌표%
+        현재Y좌표=%Y좌표%
+        if(이전X좌표=현재X좌표 and 이전Y좌표=현재Y좌표){
+            Random, RandWalk, 1, 4
+            if(RandWalk=1){
+                ControlSend,, {right},ahk_class Nexon.NWind
+            }
+            if(RandWalk=2){
+                ControlSend,, {Left},ahk_class Nexon.NWind
+            }
+            if(RandWalk=3){
+                ControlSend,, {down},ahk_class Nexon.NWind
+            }
+            if(RandWalk=4){
+                ControlSend,, {up},ahk_class Nexon.NWind
+            }
+        }
+        RandomTimer:=A_TickCount
+    }
+}
+return
+
 F3::
-FileAppend, %X좌표%`,%Y좌표% `r, Pos.txt
+if(prev <> filenum){
+    FileAppend, %filenum% `r, resource/Pos.txt
+}
+FileAppend, %X좌표%`,%Y좌표% `r, resource/Pos.txt
+prev:= filenum
 return
 F4::
 gdipToken := Gdip_Startup()
 PosX := X찾-516
 PosY := Y찾-736
 string = %PosX%|%PosY%|72|17
-MsgBox, %string%
+; MsgBox, %string%
+filenum += 1
+fileName = resource/%filenum%.bmp
 pBitmap:=Gdip_BitmapFromScreen(string)
-ret := Gdip_SaveBitmapToFile(pBitmap, "pos.bmp")
+ret := Gdip_SaveBitmapToFile(pBitmap, fileName)
+
 file = expected.bmp
 return
