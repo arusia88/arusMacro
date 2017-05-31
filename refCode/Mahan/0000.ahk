@@ -7,6 +7,7 @@
 #Include, MLib\Hex2Bin.ahk
 #Include, MLib\json.ahk
 #Include, convertImgToPos.ahk
+#Include, gdipWrapper.ahk
 #SingleInstance, force
 ; #NoEnv
 CoordMode,Pixel,Screen

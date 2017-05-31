@@ -1,5 +1,6 @@
 
 °ü¹Ìµ¿:
+; MsgBox, °ü¹Ìµ¿
 ÃÊ±âÈ­ = 1000
 hellfire_timer := A_TickCount
 
@@ -7,7 +8,7 @@ curIdx = 1
 mapIdx = 1
 FileRead, buffer, Map\kwanmi.json
 t=(%buffer%)
-FileAppend, %t%, log.txt
+
 Loop {
     Gosub, °ü¹Ìµ¿ÁÂÇ¥
     Gosub, ÀÌµ¿
@@ -20,6 +21,7 @@ Loop {
 Return
 
 °ü¹Ìµ¿ÁÂÇ¥:
+; MsgBox, °ü¹Ìµ¿ÁÂÇ¥
 if(ÃÊ±âÈ­=1000){
     BlockInput, On
     Sleep 300
@@ -32,8 +34,9 @@ StringReplace, resultPath, getPath, `", ,All
 mapPath = %A_Scriptdir%\%resultPath%
 totalCount := json(t, "mapInfo." mapIdx ".count")
 mapCount := json(t, "count")
-ImageSearch, x¸Ê1, y¸Ê1, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+200, *TransFFFFFF *80 %mapPath%
-if(ErrorLevel=0) {
+if(ImageSearchWithGdip(x¸Ê1, y¸Ê1, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+615, mapPath, 0, 0xFFFFFF) >= 1)
+{
+    ; MsgBox, ÀÌ¹ÌÁö¼­Ä¡ÀÌÈÄ
     if(ÃÊ±âÈ­ <> 0401) {
        return
     }
@@ -62,6 +65,7 @@ if(ErrorLevel=0) {
         Gosub, doOnMap3
 
     }
+    Sleep, 100
 
 } else {
     if(totalCount <= curIdx) {
@@ -85,13 +89,16 @@ doOnMap2:
     if(!°¥X and !°¥Y) {
         Gosub, setNextCoordinate
     }
-    if(isDaenamu() = 1) {
-        if(attack_mop() = 0){
+    isDaenamu:=isDaenamu()
+    attack_mop:=attack_mop()
+    if(isDaenamu = 1) {
+        if(attack_mop = 0){
             attack_xy(xDaenamu, yDaenamu) ; target is daenamu
         }
     } else {
-        if(attack_mop() = 0){
-            Gosub, ¸÷ÀÎ½Ä
+        if(attack_mop = 0){
+            ; MsgBox, updateNext
+            ; Gosub, ¸÷ÀÎ½Ä
             Gosub, setNextCoordinate
         }
     }
@@ -99,7 +106,7 @@ Return
 
 doOnMap3:
     Gosub, fire_yuseong
-    if(!°¥X and !°¥Y) {
+    if(!°¥X and !°¥Y || (°¥X = 13 and °¥Y = 0)) {
         Gosub, setNextCoordinate
     }
     Gosub, ¹öÇÁ
@@ -122,14 +129,15 @@ checkGiyomasa:
 Return
 
 setNextCoordinate:
-    cur := json(t, "mapInfo." mapIdx ".coordinate."curIdx)
-    StringReplace, cur, cur, `", ,All
-    StringSplit, curPos, cur , `,
-    °¥X:=curPos1, °¥Y:=curPos2
-
+    ; MsgBox, % "prev cur : " cur " " XÁÂÇ¥ " / " YÁÂÇ¥
     if(Abs(XÁÂÇ¥-curPos1) <= 1 and Abs(YÁÂÇ¥-curPos2) <= 1){
         curIdx += 1
     }
+    cur := json(t, "mapInfo." mapIdx ".coordinate."curIdx)
+    ; MsgBox, % "cur : " cur
+    StringReplace, cur, cur, `", ,All
+    StringSplit, curPos, cur , `,
+    °¥X:=curPos1, °¥Y:=curPos2
 Return
 
 attack_mop() {
@@ -156,8 +164,8 @@ attack_mop() {
 
 isGiyomasa() {
     global
-    ImageSearch, xGiyo, yGiyo, findSelfX, findSelfY, findSelfX+811, findSelfY+615, *TransFFFFFF *80 Img\kwanmi\giyomasa.bmp
-    if(ErrorLevel = 0){
+    if(ImageSearchWithGdip(xGiyo, yGiyo, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmi\giyomasa.bmp", 0, 0xFFFFFF) >= 1)
+    {
         return 1
     } else {
         return 0
@@ -165,8 +173,8 @@ isGiyomasa() {
 }
 isDaenamu() {
     global
-    ImageSearch, xDaenamu, yDaenamu, findSelfX, findSelfY, findSelfX+811, findSelfY+615, Img\kwanmi\daenamu.bmp
-    if(ErrorLevel = 0){
+    if(ImageSearchWithGdip(xDaenamu, yDaenamu, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmi\daenamu.bmp") >= 1)
+    {
         return 1
     } else {
         return 0
@@ -175,8 +183,8 @@ isDaenamu() {
 
 isSamurai(){
     global
-    ImageSearch, xSamu, ySamu, findSelfX, findSelfY, findSelfX+811, findSelfY+615, *TransFFFFFF *80 Img\kwanmi\samurai.bmp
-    if(ErrorLevel = 0){
+    if(ImageSearchWithGdip(xSamu, ySamu, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmi\samurai.bmp", 0, 0xFFFFFF) >= 1)
+    {
         return 1
     } else {
         return 0
@@ -185,8 +193,8 @@ isSamurai(){
 
 isGungsa() {
     global
-    ImageSearch, xGungsa, yGungsa, findSelfX, findSelfY, findSelfX+811, findSelfY+615, *TransFFFFFF *80 Img\kwanmi\gungsa.bmp
-    if(ErrorLevel = 0){
+    if(ImageSearchWithGdip(xGungsa, yGungsa, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmi\gungsa.bmp", 0, 0xFFFFFF) >= 1)
+    {
         return 1
     } else {
         return 0
@@ -195,8 +203,8 @@ isGungsa() {
 
 isDaejang() {
     global
-    ImageSearch, xDaejang, yDaejang, findSelfX, findSelfY, findSelfX+811, findSelfY+615, *TransFFFFFF *80 Img\kwanmi\daejang.bmp
-    if(ErrorLevel = 0){
+    if(ImageSearchWithGdip(xDaejang, yDaejang, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmi\daejang.bmp", 0, 0xFFFFFF) >= 1)
+    {
         return 1
     } else {
         return 0
@@ -205,8 +213,8 @@ isDaejang() {
 
 isSpecialBuf() {
     global
-    ImageSearch, xSpecialBuf, ySpecialBuf, findSelfX, findSelfY, findSelfX+500, findSelfY+615, Img\kwanmi\specialBuf.bmp
-    if(ErrorLevel = 0){
+    if(ImageSearchWithGdip(xSpecialBuf, ySpecialBuf, findSelfX, findSelfY, findSelfX+500, findSelfY+615, "Img\kwanmi\specialBuf.bmp") >= 1)
+    {
         return 1
     } else {
         return 0
@@ -265,10 +273,11 @@ fire_yuseong:
 return
 
 findNPC:
-    ImageSearch, xPotal, yPotal, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+findSelfHeight, Img\kwanmi\waitroom.bmp
-    if(ErrorLevel = 0) {
+    if(ImageSearchWithGdip(xPotal, yPotal, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+findSelfHeight, "Img\kwanmi\waitroom.bmp") = 1)
+    {
         xPotal := xPotal+275
         yPotal := yPotal+45
+        ; MsgBox, % "result return : " xPotal " " yPotal
         ControlSend, , {Esc}, ahk_class Nexon.NWind
         Sleep, 200
         MouseClick, Left, %xPotal%, %yPotal%, 2
