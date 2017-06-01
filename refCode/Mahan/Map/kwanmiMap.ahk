@@ -12,6 +12,11 @@ t=(%buffer%)
 Loop {
     Gosub, 관미동좌표
     Gosub, 이동
+    if(Y좌표 < 6){
+        Gosub, 공증
+        Gosub, 기원
+        Gosub, 성려
+    }
     Gosub, 랜덤이동
     if(초기화=0411){
         break
@@ -34,7 +39,7 @@ StringReplace, resultPath, getPath, `", ,All
 mapPath = %A_Scriptdir%\%resultPath%
 totalCount := json(t, "mapInfo." mapIdx ".count")
 mapCount := json(t, "count")
-if(ImageSearchWithGdip(x맵1, y맵1, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+615, mapPath, 0, 0xFFFFFF) >= 1)
+if(ImageSearchWithGdip(x맵1, y맵1, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+615, mapPath, 50, 0xFFFFFF) >= 1)
 {
     ; MsgBox, 이미지서치이후
     if(초기화 <> 0401) {
@@ -89,16 +94,18 @@ doOnMap2:
     if(!갈X and !갈Y) {
         Gosub, setNextCoordinate
     }
-    isDaenamu:=isDaenamu()
-    attack_mop:=attack_mop()
-    if(isDaenamu = 1) {
-        if(attack_mop = 0){
+    if(갈X = 13 and 갈Y = 0){
+        ControlSend, , {Left}, ahk_class Nexon.NWind
+        Sleep, 100
+        ControlSend, , {Right}, ahk_class Nexon.NWind
+    }
+
+    if(isDaenamu() = 1) {
+        if(attack_mop() = 0){
             attack_xy(xDaenamu, yDaenamu) ; target is daenamu
         }
     } else {
-        if(attack_mop = 0){
-            ; MsgBox, updateNext
-            ; Gosub, 몹인식
+        if(attack_mop() = 0){
             Gosub, setNextCoordinate
         }
     }
@@ -112,16 +119,12 @@ doOnMap3:
     Gosub, 버프
     Gosub, 공증
     Gosub, 기원
-    if (attack_mop() = 0){
-        Gosub, 몹인식
-    }
     Gosub, checkGiyomasa
 
 Return
 
 checkGiyomasa:
-    if (isGiyomasa() = 1 || isGungsa() = 1 || isSamurai() = 1 || isDaejang() =1)
-    {
+    if ( attack_mop() = 1) {
         ControlSend,,{Shift down}z{Shift up}h,ahk_class Nexon.NWind
     } else {
         Gosub, setNextCoordinate
@@ -142,6 +145,9 @@ Return
 
 attack_mop() {
     global
+    if(isMop() = 0) {
+        return 0
+    }
     result_mopAttack := 1
     if (isGiyomasa() = 1 && isSpecialBuf() = 1){
         attack_hellfire_xy(xGiyo+15, yGiyo+70)

@@ -157,7 +157,7 @@ isMop() {
 }
 
 몹인식:
-if(isMop() == 1){
+if(isMop() = 1){
     Gosub, 공증
     Gosub, 전체
     Gosub, 기원
