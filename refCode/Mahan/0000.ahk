@@ -20,7 +20,7 @@ SetControlDelay,-1
 version = v1.1
 
 ; map info insert
-rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉 일월마을 폐허대로 선비족 관미동
+rawMapList = 대기실부터던전 위례부터대기실 신수계부터현무봉 일월마을 폐허대로 선비족 관미동 관미서
 StringSplit, MapList, rawMapList, %A_Space%
 Loop, %MapList0%
 {
@@ -33,6 +33,17 @@ Goto, Go
 Go:
 msgbox, 메크로 제제는 책임지지 않습니다. 자세한 사항은 블로그를 참조해주세요
 gui:
+; skill sammae jin hwa
+st = t
+; skill tal myoung
+sq = b
+; skill pokryou yubing
+sp = c
+; skill fast casting
+sk = d
+; skill mangong
+smg = u
+
 gui,destroy
 Gui, Add, GroupBox, x26 y20 w190 h110 +Center, 42억일때 할 행동(경변십억d)
 Gui, Add, Radio, x36 y40 h20 v영혼체력, 영혼사(체력)
@@ -68,14 +79,14 @@ Gui, Add, CheckBox, x126 y220 h20 v혼헬파 checked, 혼+헬파
 Gui, Add, CheckBox, x126 y240 h20 v혼성려 checked, 혼+성려
 Gui, Add, CheckBox, x126 y160 w40 h20 vsa8 checked, 명상
 Gui, Add, DropDownList, x166 y160 w40 vsb8 choose5, 1|2|3|4|5|6|7|8|9|0
-Gui, Add, CheckBox, x36 y300 w40 h20 vsa9, 지폭
+Gui, Add, CheckBox, x36 y300 w40 h20 vsa9 checked, 지폭
 Gui, Add, DropDownList, x76 y300 w40 vsb9 choose8, 1|2|3|4|5|6|7|8|9|0
-Gui, Add, CheckBox, x36 y320 w40 h20 vsa10, 폭류
+Gui, Add, CheckBox, x36 y320 w40 h20 vsa10 checked, 폭류
 Gui, Add, DropDownList, x76 y320 w40 vsb10 choose10, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y280 w68 h20 vc사슬 checked, 사슬
 Gui, Add, Edit, x196 y280 w15 h20 ve사슬 +Center, s
 Gui, Add, CheckBox, x126 y300 h20 v랜덤이동, 랜덤이동
-Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose7, %MapNameList%
+Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose8, %MapNameList%
 Gui, Add, CheckBox, x36 y340 h20 vDefenseHupung, 허풍선방지
 Gui, Add, CheckBox, x36 y360 h20 vsm checked, 마방
 Gui, Add, Edit, x76 y360 w15 h20 vsmNum +Center, i
@@ -144,6 +155,7 @@ return
 Gosub 보무
 Gosub 명상
 Gosub 마방
+Gosub 생환
 return
 
 isMop() {
@@ -172,6 +184,16 @@ return
 if(sa5=1){
    ControlSend,,%sb5%,ahk_class Nexon.NWind
 }
+return
+생환:
+ImageSearch, x마방, y마방, findSelfX, findSelfY, findSelfX+400, findSelfY+800, *transFFFFFF Img\lifesafer.bmp
+    if(ErrorLevel = 0){
+        ;already buf taken
+    } else{
+        ControlSend,,{Shift down}z{Shift up}g{Enter},ahk_class Nexon.NWind
+        Sleep, 2000
+    }
+
 return
 마방:
 if(sm=1){
@@ -622,10 +644,10 @@ Gui,2: Add, Text, v가야할Y x10 y30 w200 h20 , -
 Gui,2: Add, Text, v현X x10 y50 w200 h20 , -
 Gui,2: Add, Text, v현Y x10 y70 w200 h20 , -
 Gui,2: Add, Text, v초기화값 x10 y90 w200 h20 , -
-Gui,2: Add, Text, vGui2Text6 x10 y110 w200 h20 , -
-Gui,2: Add, Text, vGui2Text7 x10 y130 w200 h20 , -
-Gui,2: Add, Text, vGui2Text8 x10 y150 w200 h20 , -
-Gui,2: Add, Text, vGui2Text9 x10 y170 w200 h20 , -
+Gui,2: Add, Text, vcheckMopTime_cal x10 y110 w200 h20 , -
+Gui,2: Add, Text, vcheckMop_Timer x10 y130 w200 h20 , -
+Gui,2: Add, Text, vprevExistNoMop x10 y150 w200 h20 , -
+Gui,2: Add, Text, vresult_mopAttack x10 y170 w200 h20 , -
 Gui,2: Add, Text, vGui2Text10 x10 y190 w200 h20 , -
 Gui,2: Add, Text, vGui2Text11 x10 y210 w200 h20 , -
 Gui,2: Add, Text, vGui2Text12 x10 y230 w200 h20 , -
@@ -637,7 +659,7 @@ Gui,2: Add, Text, vGui2Text17 x10 y330 w200 h20 , -
 Gui,2: Add, Text, vGui2Text18 x10 y350 w200 h20 , -
 Gui,2: Add, Text, vGui2Text19 x10 y370 w200 h20 , -
 Gui,2: Add, Text, vGui2Text20 x10 y390 w200 h20 , -
-GUI,2:Show, w200 h150, 진행상황판
+GUI,2:Show, w200 h200, 진행상황판
 return
 
 2Guiclose:
@@ -655,3 +677,4 @@ return
 #Include, Map\ruinMap.ahk
 #Include, Map\sunbiMap.ahk
 #Include, Map\kwanmiMap.ahk
+#Include, Map\kwanmiseoMap.ahk

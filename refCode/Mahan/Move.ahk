@@ -13,6 +13,7 @@ moveByChosang(directionKey) {
 
 
 이동:
+Thread, NoTimers
 X백 := convertImgToPos(범위X백a, 범위Y위, 100)
 X십 := convertImgToPos(범위X십a, 범위Y위, 10)
 X일 := convertImgToPos(범위X일a, 범위Y위, 1)
@@ -49,21 +50,27 @@ if(초상 = 1){
     }
 }
 
+curDirection = 0
+
 if(갈Y>Y좌표){
     ControlSend,, {down},ahk_class Nexon.NWind
     Sleep 50
+    curDirection = 3
 }
 if(갈Y<Y좌표){
     ControlSend,, {up},ahk_class Nexon.NWind
     Sleep 50
+    curDirection = 4
 }
 if(갈X>X좌표){
     ControlSend,, {right},ahk_class Nexon.NWind
     Sleep 50
+    curDirection = 1
 }
 if(갈X<X좌표){
     ControlSend,, {Left},ahk_class Nexon.NWind
     Sleep 50
+    curDirection = 2
 }
 
 
@@ -71,14 +78,16 @@ if(갈X<X좌표){
 ; Gosub, 기원
 
 ;; At kwanmi, it is not needed because it is instance field
-; Gosub, heopung
+Gosub, heopung
 
 ; MsgBox, 가야할X, 갈X %갈X% 가야할Y, 갈Y %갈Y% 현X, 현X %X좌표% 현Y, 현Y %Y좌표%초기화값, 값 %초기화%
 guicontrol, 2:text,가야할X, 갈X %갈X%
 guicontrol, 2:text,가야할Y, 갈Y %갈Y%
 guicontrol, 2:text,현X, 현X %X좌표%
 guicontrol, 2:text,현Y, 현Y %Y좌표%
-guicontrol, 2:text,초기화값, 값 %초기화%
+guicontrol, 2:text,초기화값, 값 %stateOnMap3%
+guicontrol, 2:text,result_mopAttack, 몹이존재하는지 %result_mopAttack%
+
 return
 
 랜덤이동:
@@ -92,24 +101,40 @@ if(랜덤이동=1){
         현재X좌표=%X좌표%
         현재Y좌표=%Y좌표%
         if(이전X좌표=현재X좌표 and 이전Y좌표=현재Y좌표){
-            Random, RandWalk, 1, 4
-            if(RandWalk=1){
-                ControlSend,, {right},ahk_class Nexon.NWind
-            }
-            if(RandWalk=2){
-                ControlSend,, {Left},ahk_class Nexon.NWind
-            }
-            if(RandWalk=3){
-                ControlSend,, {down},ahk_class Nexon.NWind
-            }
-            if(RandWalk=4){
-                ControlSend,, {up},ahk_class Nexon.NWind
-            }
+            if (curDirection = 1)
+                clickOver(120, 55)
+            if (curDirection = 2)
+                clickOver(-125, 62)
+            if (curDirection = 3)
+                clickOver(-60, 145)
+            if (curDirection = 4)
+                clickOver(-15, -110)
+            ; MsgBox, clicked
+
         }
         RandomTimer:=A_TickCount
     }
 }
 return
+
+F5::
+clickOver(-125, 62)
+Return
+
+clickOver(x,y) {
+    global
+    if (ImageSearchWithGdip(xMe, yMe, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmi\me.bmp", 0, 0xFFFFFF) >= 1) {
+        clickX := xMe + x
+        clickY := yMe + y
+    } else {
+        clickX := 400 + x
+        clickY := 300 + y
+    }
+    MouseClick, Left, %clickX%, %clickY%, 1, ,D
+    Sleep, 1000
+    MouseClick, Left, %clickX%, %clickY%, 1, ,U
+    Sleep, 1000
+}
 
 F3::
 if(prev <> filenum){
