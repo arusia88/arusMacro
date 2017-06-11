@@ -101,12 +101,16 @@ if(·£´ýÀÌµ¿=1){
         ÇöÀçXÁÂÇ¥=%XÁÂÇ¥%
         ÇöÀçYÁÂÇ¥=%YÁÂÇ¥%
         if(ÀÌÀüXÁÂÇ¥=ÇöÀçXÁÂÇ¥ and ÀÌÀüYÁÂÇ¥=ÇöÀçYÁÂÇ¥){
+            ; Right
             if (curDirection = 1)
-                clickOver(120, 55)
+                clickOver(120, 60)
+            ; Left
             if (curDirection = 2)
                 clickOver(-125, 62)
+            ; Down
             if (curDirection = 3)
-                clickOver(-60, 145)
+                clickOver(-100, 145)
+            ; Up
             if (curDirection = 4)
                 clickOver(-15, -110)
             ; MsgBox, clicked
@@ -131,7 +135,7 @@ clickOver(x,y) {
         clickY := 300 + y
     }
     MouseClick, Left, %clickX%, %clickY%, 1, ,D
-    Sleep, 1000
+    Sleep, 3000
     MouseClick, Left, %clickX%, %clickY%, 1, ,U
     Sleep, 1000
 }

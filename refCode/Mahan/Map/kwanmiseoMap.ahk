@@ -3,7 +3,6 @@
 ÃÊ±âÈ­ = 1000
 hellfire_timer := A_TickCount
 screenAttack_timer := A_TickCount
-stateOnMap3 = 0
 checkMop_Timer := A_TickCount
 curIdx = 1
 mapIdx = 1
@@ -44,6 +43,7 @@ if(ImageSearchWithGdip(x¸Ê1, y¸Ê1, findSelfX, findSelfY, findSelfX+findSelfWidth
 
     if(mapIdx = 1) {
         Gosub, findNPCAtSeo
+        Return
     }
 
     if(mapIdx >= 4 and mapIdx < 11) {
@@ -53,11 +53,12 @@ if(ImageSearchWithGdip(x¸Ê1, y¸Ê1, findSelfX, findSelfY, findSelfX+findSelfWidth
 
     if(mapIdx = 10) {
         Gosub, handleGiyo
-        stateOnMap3 = 0
     }
 
     if(mapIdx = 11) {
         Gosub, handleJang
+        Gosub, ¹öÇÁ
+        Gosub, ¸÷ÀÎ½Ä
 
     }
     Gosub, setNextCoordinate
@@ -90,9 +91,12 @@ if(XÁÂÇ¥ = 21 and YÁÂÇ¥ = 25) {
     Sleep, 1000
 }
 
+attack_mop()
+
 Return
 
 handleJang:
+F2::
     if(XÁÂÇ¥ = 15 and YÁÂÇ¥ = 22) {
         ControlSend, , {Right}, ahk_class Nexon.NWind
         Sleep, 1000
@@ -100,20 +104,67 @@ handleJang:
         Sleep, 1000
     }
 
-    ; healToSelf return 0 mean that self heal dosn't need more
+    if(isJangbyeok() = 1 and totalCount <= curIdx ) {
+        curIdx = 1
+        Gosub, setNextCoordinate
+    }
+
+
+Return
+
+F1::
+    if(XÁÂÇ¥ = 15 and YÁÂÇ¥ = 22) {
+        ControlSend, , {Right}, ahk_class Nexon.NWind
+        Sleep, 1000
+        ControlSend, , {Left}, ahk_class Nexon.NWind
+        Sleep, 1000
+    }
+
     Gosub, °øÁõ
-    if (healToSelf() = 0) {
-        Gosub, ¹öÇÁ
-        if (isJangbyeok() = 1) {
-            attack_hellfire_xy(xJang-10, yJang+70)
-            attack_xy(xJang-10, yJang+70)
+    Gosub, ±â¿ø
+    Gosub, ¹öÇÁ
+
+    Loop, 1
+    {
+        ; healToSelf return 0 mean that self heal dosn't need more
+        if (healToSelf() = 1) {
+            MsgBox, 2222
+            Return
         }
-        ; MsgBox, attack that
-    } else {
-        Gosub, ¸÷ÀÎ½Ä
+        if (leaveFromJang() = 0) {
+            Gosub, ¸÷ÀÎ½Ä
+            MsgBox, 111
+            return
+        }
+        Gosub, ÇïÆÄ
+        Gosub, ¼º·Á
+        Gosub, »ç½½
+        sleep 3000
+        MsgBox, done
     }
 
 Return
+
+leaveFromJang() {
+    global
+    ; if (ImageSearchWithGdip(xMe, yMe, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmi\me.bmp", 50, 0xFFFFFF) >= 1) {
+    ImageSearch, xMe, yMe, findSelfX, findSelfY, findSelfX+811, findSelfY+615, *50 *transFFFFFF Img\kwanmi\me.bmp
+    if(ErrorLevel = 0){
+        if (isJangbyeok() = 1) {
+            if (yJang-yMe > 0){
+                clickOver(-15, -110)
+            } else if (yJang-yMe < 0){
+                clickOver(-100, 145)
+            } else if (xJang-xMe > 0){
+                clickOver(-125,62)
+            } else if (xJang-xMe < 0){
+                clickOver(120,60)
+            }
+            return 1
+        }
+    }
+    return 0
+}
 
 healToSelf() {
 global
@@ -123,17 +174,14 @@ ImageSearch, xx, yy, %¹üÀ§HP%, %¹üÀ§YÃ¼%, %¹üÀ§HP%+30, %¹üÀ§YÃ¼%+10, *50 Img\hpc
         Sleep 100
         ; MsgBox, heal need
         return 1
-    }
-    else
-    {
+    } else {
         ; MsgBox, heal not need
         return 0
-
     }
 }
 
 findNPCAtSeo:
- if(!°¥X and !°¥Y) {
+ if(°¥X=15 and °¥Y=22 || !°¥X and !°¥Y) {
         mapIdx = 1
         curIdx = 1
         Gosub, setNextCoordinate
@@ -161,19 +209,18 @@ findNPCAtSeo:
         curIdx = 1
         return
     }
+    Gosub, setNextCoordinate
+
 return
 
 isJangbyeok() {
     global
-    if(ImageSearchWithGdip(xJang, yJang, findSelfX, findSelfY, findSelfX+811, findSelfY+615, "Img\kwanmiseo\jang.bmp", 0, 0xFFFFFF) >= 1)
-    {
-        ; MsgBox, find jang
+    ImageSearch, xJang, yJang, xMe-150, yMe-100, xMe+150, yMe+150, *80 *transFFFFFF Img\kwanmiseo\jang.bmp
+    if(ErrorLevel = 0){
         return 1
     } else {
         ; MsgBox, no find jang
         return 0
     }
 }
-; Using kwanmi Method
-; setNextCoordinate:
-; Return
+

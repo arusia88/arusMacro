@@ -1,4 +1,8 @@
+#Include, lib\Gdip_All.ahk
+#Include, lib\Gdip_ImageSearch.ahk
 
+HayStack=SampleWindow
+ImageSearchWithGdip(outputX,outputY, 0, 0, 1920, 1080, "nowhite.bmp")
 ; Gdip_ImageSearch(pBitmapHaystack,pBitmapNeedle,ByRef OutputList=""
 ; ,OuterX1=0,OuterY1=0,OuterX2=0,OuterY2=0,Variation=0,Trans=""
 ; ,SearchDirection=1,Instances=1,LineDelim="`n",CoordDelim=",") {}
@@ -6,23 +10,34 @@
 
 ImageSearchWithGdip(Byref outputX,Byref outputY, fsX, fsY, feX, feY, targetImg, Variation=0, Trans="")
 {
+    global
     If !pToken := Gdip_Startup()
     {
         MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
         ExitApp
     }
-    ; Create haystack with Wind process with NWind Size
-    screenValue := fsX "|" fsY "|" 811 "|" 615
+    Time1:= A_TickCount
+    ; screenValue := fsX "|" fsY "|" 811 "|" 615
+    ; raster:=0x40000000 + 0x00CC0020
+    ; pBitmapHayStack := Gdip_BitmapFromScreen(screenValue,raster)
+    ; pBitmapHayStack := Gdip_CloneBitmapArea(pBitMapTemp, fsX, fsY, feX, feY)
+
+    ; WinGet, hwndHay, ID, %HayStack%
+    ; pBitmapHayStack := Gdip_BitmapFromHWND(hwndHay)
+
+    ; ; Create pBitmapNeedle
+    ; pBitmapNeedle := Gdip_CreateBitmapFromFile(targetImg)
+    screenValue := 0 "|" 0 "|" 1920 "|" 1080
     raster:=0x40000000 + 0x00CC0020
     pBitmapHayStack := Gdip_BitmapFromScreen(screenValue,raster)
-    ; pBitmapHayStack := Gdip_CloneBitmapArea(pBitMapTemp, fsX, fsY, feX, feY)
-    ; Create pBitmapNeedle
-    pBitmapNeedle := Gdip_CreateBitmapFromFile(targetImg)
+    pBitmapNeedle := Gdip_CreateBitmapFromFile("converted2.bmp")
 
     ; Calculate find scope
     Width1 := Gdip_GetImageWidth(pBitmapHayStack), Height1 := Gdip_GetImageHeight(pBitmapHayStack)
     outputCount := Gdip_ImageSearch(pBitmapHayStack,pBitmapNeedle,OutputList
 ,0,0,Width1,Height1, Variation, Trans)
+
+    MsgBox % OutputList "  taken Time : " A_TickCount - Time1
 
     ; FileAppend, output : %outputCount% targetImg : %targetImg% `r, log.txt
 
@@ -44,6 +59,7 @@ ImageSearchWithGdip(Byref outputX,Byref outputY, fsX, fsY, feX, feY, targetImg, 
 }
 
 ImageSearchWithGdipMcode(Byref outputX,Byref outputY, fsX, fsY, feX, feY, targetImg, Variation=0, Trans="") {
+        global
     If !pToken := Gdip_Startup()
     {
         MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system

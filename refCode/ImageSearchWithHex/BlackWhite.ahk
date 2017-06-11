@@ -4,7 +4,7 @@
 ;Thanks to Tic for his Gdiplus library which a lot of this is copy
 ;and paste from a tutorial by him.
 
-#Include, Gdip_all.ahk
+#Include, lib\Gdip_all.ahk
 #SingleInstance, Force
 #NoEnv
 SetBatchLines, -1
@@ -26,7 +26,7 @@ Gui, 1: Show, NA
 hwnd1 := WinExist()
 
 ;Load a sample picture
-pBitmap := Gdip_CreateBitmapFromFile("test.bmp")
+pBitmap := Gdip_CreateBitmapFromFile("me.bmp")
 If !pBitmap
 {
 	MsgBox, 48, File loading error!, Could not load the image specified
@@ -49,7 +49,7 @@ G := Gdip_GraphicsFromHDC(hdc)
 
 Gdip_DrawImage(G, pBitmap, 0, 0, Width, Height, 0, 0, Width, Height)
 BlackWhite(pBitmap, pBitmapOut, Width//2, Height)
-Gdip_SaveBitmapToFile(pBitmapOut, "converted.bmp")
+Gdip_SaveBitmapToFile(pBitmapOut, "converted2.bmp")
 Gdip_DrawImage(G, pBitmapOut, Width//2, 0, Width, Height, 0, 0, Width, Height)
 
 

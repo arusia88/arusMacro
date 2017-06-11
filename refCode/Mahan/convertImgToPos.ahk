@@ -73,7 +73,11 @@ convertImgToPos(x, y, z)
     yil9= 424d96010000000000003600000028000000080000000b000000010020000000000000000000c40e0000c40e000000000000000000002c7cbcff000000ff000000ff000000ff1c84b5ff1c74acff2c7cb3ff1c74acff000000ffaf776fffaf776fffaf776fff000000ff217cbcff217cbcff1c74b6ff1c74b6ff000000ffb3837bffb3837bffb3837bff000000ff1c74b6ff2474b4ff2b84b7ff2c7cb3ff000000ff000000ffbb8b83ffbb8b83ff000000ff2c74b4ff2c7cbcff000000ffc3978fffc3978fffc3978fffc3978fff000000ff1c74b6ff000000ffcba397ffcba397ffcba397ffcba397ffcba397ffcba397ff000000ff000000ffcfaba3ffcfaba3ff000000ff000000ffcfaba3ffcfaba3ff000000ff000000ffdfc3bbffdfc3bbff000000ff000000ffdfc3bbffdfc3bbff000000ff2b84b7ff000000ffcfaba3ffcfaba3ff000000ffcfaba3ffcfaba3ff000000ff3584b7ff2c7cbcff000000ffbb8b83ffbb8b83ffbb8b83ff000000ff2c7cb3ff2c74b4ff2c7cbcff2b84b7ff000000ff000000ff000000ff347cbcff2c7cb3ff
 
 
-    gdipToken := Gdip_Startup()
+    If !gdipToken := Gdip_Startup()
+    {
+        MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
+        ExitApp
+    }
     string = %x%|%y%|8|11
 
     pBitmap:=Gdip_BitmapFromScreen(string)
@@ -126,6 +130,7 @@ convertImgToPos(x, y, z)
 
      ; MsgBox, value/jari %con% / %z%
      ; FileAppend, 자리 : %z% 결과 : %con% 캡쳐 hex : %resultHex%, Test.txt
+    Gdip_Shutdown(gdipToken)
 
     return %con%
 

@@ -10,6 +10,7 @@ return
 y::
 SetTimer, attackAll, Off
 ControlSend, ,{Esc}, ahk_class Nexon.NWind
+ControlSend, ,{Esc}, target
 ; ControlSend, , {Esc}, target
 ; SetTimer, healSelf, Off
 return
@@ -23,13 +24,13 @@ return
 ; Return
 
 F1::
-WinSetTitle,ë°”ëŒì˜ë‚˜ë¼,,target
+WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,target
 return
 F2::
-WinSetTitle,ë°”ëŒì˜ë‚˜ë¼,,self
+WinSetTitle,¹Ù¶÷ÀÇ³ª¶ó,,self
 return
 F3::
-WinSetTitle,self2,,self
+WinSetTitle,target,,¹Ù¶÷ÀÇ³ª¶ó
 return
 
 ; w::
@@ -109,7 +110,7 @@ if(ing = 0){
     ControlSend, , {Up}, ahk_class Nexon.NWind
     Sleep, 200
     ControlSend, , {Enter}, ahk_class Nexon.NWind
-    Sleep, 200
+    Sleep, 500
 }
 ing = 0
 Return

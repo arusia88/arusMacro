@@ -66,6 +66,7 @@ if(ImageSearchWithGdip(x¸Ê1, y¸Ê1, findSelfX, findSelfY, findSelfX+findSelfWidth
     }
 
     if(mapIdx = 3) {
+
         Gosub, doOnMap3
 
     }
@@ -122,12 +123,12 @@ Return
 
 doOnMap3:
     if(!°¥X and !°¥Y || (°¥X = 13 and °¥Y = 0)) {
+        Gosub, ÀüÃ¼
         Gosub, setNextCoordinate
     }
     ; find monster, if mosster is not found while 5 seconds, state set 2
 
     if (stateOnMap3 = 0) {
-        Gosub, ÀüÃ¼
         stateOnMap3 := attack_mop() > 0 ? 4 : 3
     }
 
@@ -146,6 +147,7 @@ doOnMap3:
     }
 
     if (stateOnMap3 = 3) {
+        Gosub, °øÁõ
         Gosub, ¼º·Á
         Gosub, setNextCoordinate
         stateOnMap3 := findStateOnMap3()
@@ -184,7 +186,7 @@ findStateOnMap3() {
     }
 
     if (phase = 0) {
-        return 0
+        return 3
     }
     return 3
 }
@@ -208,14 +210,6 @@ isNoExistKwanmiMop() {
     ; }
     return 0
 }
-
-checkGiyomasa:
-    if ( attack_mop() = 1) {
-        ControlSend,,{Shift down}z{Shift up}h,ahk_class Nexon.NWind
-    } else {
-        Gosub, setNextCoordinate
-    }
-Return
 
 setNextCoordinate:
     ; MsgBox, % "prev cur : " cur " " XÁÂÇ¥ " / " YÁÂÇ¥
@@ -407,7 +401,7 @@ findNPC:
         curIdx = 1
         Gosub, setNextCoordinate
     }
-    if(ImageSearchWithGdip(xPotal, yPotal, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+findSelfHeight, "Img\kwanmi\waitroom.bmp") = 1)
+    if(ImageSearchWithGdip(xPotal, yPotal, findSelfX, findSelfY, findSelfX+findSelfWidth, findSelfY+findSelfHeight, "Img\kwanmi\waitroom.bmp", 50) = 1)
     {
         xPotal := xPotal+275
         yPotal := yPotal+45

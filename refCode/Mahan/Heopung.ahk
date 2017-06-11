@@ -1,6 +1,10 @@
 heopung:
-gdipToken := Gdip_Startup()
 
+If !gdipToken := Gdip_Startup()
+    {
+        MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
+        ExitApp
+    }
 ; get capture heopung image
 if (heopungSent = 1 and completedReply = 1) {
     heopungSent := 0
@@ -85,5 +89,6 @@ if(heopungSent = 1 and completedReply = 0)
     }
 }
 
+Gdip_Shutdown(gdipToken)
 
 return

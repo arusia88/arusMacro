@@ -85,13 +85,13 @@ Gui, Add, CheckBox, x36 y320 w40 h20 vsa10 checked, 폭류
 Gui, Add, DropDownList, x76 y320 w40 vsb10 choose10, 1|2|3|4|5|6|7|8|9|0
 Gui, Add, CheckBox, x126 y280 w68 h20 vc사슬 checked, 사슬
 Gui, Add, Edit, x196 y280 w15 h20 ve사슬 +Center, s
-Gui, Add, CheckBox, x126 y300 h20 v랜덤이동, 랜덤이동
+Gui, Add, CheckBox, x126 y300 h20 v랜덤이동 checked, 랜덤이동
 Gui, Add, DropDownList, x126 y320 w80 vselectedMap choose8, %MapNameList%
 Gui, Add, CheckBox, x36 y340 h20 vDefenseHupung, 허풍선방지
 Gui, Add, CheckBox, x36 y360 h20 vsm checked, 마방
 Gui, Add, Edit, x76 y360 w15 h20 vsmNum +Center, i
 Gui, Add, CheckBox, x126 y340 h20 v축지, 축지사용(z)
-Gui, Add, CheckBox, x126 y360 h20 v초상, 초상사용(x)
+Gui, Add, CheckBox, x126 y360 h20 v초상 checked, 초상사용(x)
 Gui, Add, Button, x226 y20 w55 h30 g시작, 시작
 Gui, Add, Button, x281 y20 w55 h30 g설치, 설치
 Gui, Add, Button, x336 y20 w55 h30 g재설정, 재설정
@@ -135,6 +135,7 @@ return
 테스트용:
 Gosub, 재설정
 시작:
+
 GuiControl, Disable, 시작
 RandomTimer:=A_TickCount
 moveTimer := A_TickCount
@@ -555,6 +556,7 @@ return
 Pgup::
 재설정:
 WinActivate, 바람의나라
+GuiControl, Enable, 시작
 filenum = 0
 heopungSent = 0
 completedReply = 0
