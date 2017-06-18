@@ -131,11 +131,13 @@ Gui, Add, Edit, x256 y290 w60 h20 +disabled, 아이디
 Gui, Add, Edit, x256 y310 w60 h20 +disabled, 비밀번호
 Gui, Show, xCenter yCenter h420 w420, Arus Script
 Gosub, 성능향상
-return
+Return
+
 테스트용:
 Gosub, 재설정
-시작:
+Return
 
+시작:
 GuiControl, Disable, 시작
 RandomTimer:=A_TickCount
 moveTimer := A_TickCount
@@ -151,13 +153,14 @@ Loop{
     Gosub 몹인식
 
 }
-return
+Return
+
 버프:
 Gosub 보무
 Gosub 명상
 Gosub 마방
 Gosub 생환
-return
+Return
 
 isMop() {
     global
@@ -180,12 +183,13 @@ if(isMop() = 1){
     Gosub, 첨
     Gosub, 사슬
 }
-return
+Return
+
 첨:
 if(sa5=1){
    ControlSend,,%sb5%,ahk_class Nexon.NWind
 }
-return
+Return
 생환:
 ImageSearch, x마방, y마방, findSelfX, findSelfY, findSelfX+400, findSelfY+800, *transFFFFFF Img\lifesafer.bmp
     if(ErrorLevel = 0){
@@ -195,7 +199,7 @@ ImageSearch, x마방, y마방, findSelfX, findSelfY, findSelfX+400, findSelfY+800, *
         Sleep, 2000
     }
 
-return
+Return
 마방:
 if(sm=1){
     ImageSearch, x마방, y마방, findSelfX, findSelfY, findSelfX+400, findSelfY+800, *transFFFFFF Img\madefence.bmp
@@ -206,7 +210,7 @@ if(sm=1){
         Sleep, 5000
     }
 }
-return
+Return
 전체:
 Cal_skillTimer1:=A_TickCount-skillTimer1
 Cal_skillTimer2:=A_TickCount-skillTimer2
@@ -218,7 +222,7 @@ if(sa10=1 and Cal_skillTimer2>5000){
    ControlSend,,%sb10%,ahk_class Nexon.NWind
     skillTimer2:=A_TickCount
 }
-return
+Return
 성려:
 if(혼성려=1 and sa4=1 and sa7=1){
 
@@ -227,7 +231,7 @@ if(혼성려=1 and sa4=1 and sa7=1){
 if(혼성려=0 and sa4=1){
    ControlSend,, {esc}v{up}v%sb4%{esc},ahk_class Nexon.NWind
 }
-return
+Return
 헬파:
 if(혼헬파=1 and sa3=1 and sa7=1 and 헬Count>=5){
    ControlSend,, {esc}v{home}{down}v%sb7%%sb3%{esc},ahk_class Nexon.NWind
@@ -238,7 +242,7 @@ if(혼헬파=0 and sa3=1 and 헬Count>=10){
     헬Count=0
 }
 헬Count++
-return
+Return
 사슬:
 if(c사슬=1 and sa7=1 and 살Count>=30){
    ControlSend,,{Shift down}z{Shift up}%e사슬%{Up}{enter},ahk_class Nexon.NWind
@@ -251,7 +255,7 @@ if(c사슬=1 and c혼=0 and 살Count>=30){
     sleep 3000
 }
 살Count++
-return
+Return
 보무:
 if(Arm1=1){
     ImageSearch, x보, y보, 20, 70, 900, 600, *80 Img\bufb.bmp
@@ -270,7 +274,7 @@ if(Arm1=1){
         }
     }
 }
-return
+Return
 공증:
 if(sa1=1){
     ; ImageSearch, x1, y1, 20, 70, 90, 600, *80 Img\resp.bmp
@@ -284,7 +288,7 @@ if(sa1=1){
         }
     ; }
 }
-return
+Return
 기원:
 if(sa2=1){
     Slider체력=70
@@ -297,7 +301,7 @@ if(sa2=1){
         Sleep 100
     }
 }
-return
+Return
 시폭:
 if(sa6=1){
     Random, explotionRand, 1, 4
@@ -314,7 +318,7 @@ if(sa6=1){
        ControlSend,,{Shift down}{right}{Shift up}%sb6%,ahk_class Nexon.NWind
     }
 }
-return
+Return
 명상:
 if(sa8=1){
     ImageSearch, X1, Y1, 20, 70, 900, 600, *80 Img\meda.bmp
@@ -327,7 +331,7 @@ if(sa8=1){
         }
     }
 }
-return
+Return
 자경:
 ImageSearch, X1, Y1, 800, 700, 1100, 800, *80 Img\exp.bmp
 if(ErrorLevel=0)
@@ -415,7 +419,7 @@ if(ErrorLevel=0)
         break
     }
 }
-return
+Return
 환수소환:
 if(환수체크=0){
     Loop, 1{
@@ -441,7 +445,7 @@ if(환수체크=0){
         break
     }
 }
-return
+Return
 환수귀환:
 if(환수귀환체크=0){
     if(Hwanreturn=1){
@@ -452,7 +456,7 @@ if(환수귀환체크=0){
         환수귀환체크=1
     }
 }
-return
+Return
 환수행동력:
 if(환수행동력체크=0){
     if(HwanA1=1){
@@ -505,7 +509,7 @@ if(환수행동력체크=0){
     }
     환수행동력체크=1
 }
-return
+Return
 
 허풍선방지:
 if(허풍선방지체크=0){
@@ -525,14 +529,15 @@ if(허풍선방지체크=0){
     }
     허풍선방지체크=1
 }
-return
+Return
+
 바퀴카운트:
 if(바퀴초기화=0){
     바퀴:=바퀴+1
     guicontrol,text,text2,%바퀴%바퀴
     바퀴초기화=1
 }
-
+Return
 
 Timer:
 Sec:=Floor((A_TickCount-Time)/1000)
@@ -546,13 +551,13 @@ else
     Sec2:=Mod(Sec,60)
     guicontrol,text,text1, %Min%분 %Sec2%초
 }
-return
+Return
 
 GuiClose:
 ExitApp
 설명서:
 msgbox ■ 구매해주셔서 감사합니다. ■`n`n 엔터키로 대화창열기/날씨효과/시야표시를 끄세요, 타겟이동을 3번으로 바꾸세요 `n`n방향키입력시 바로이동을 반드시 키세요 이거안키면 안움직임 ㅡㅡ`n`n반드시 이름표시-기타 를 키세요`n`n하단에 채팅쪽에있는 < 를 눌러서 마법퀵슬롯이 안보이게 하세요 `n`n 경변부, 십억경의위치는 d에 `n`n 행동력의환약/피리 위치는 i 입니다 `n`n 일시정지,다시시작은 Page down 처음부터 다시시작할려면 새로 키세요 `n`n 비영사천문은 대문자 Z `n`n수정 DMC  `n`n http://dmcmcr.blogspot.kr/
-return
+Return
 Pgup::
 재설정:
 WinActivate, 바람의나라
@@ -617,7 +622,8 @@ ImageSearch, X체, Y체, findSelfX+800, findSelfY+600, findSelfX+findSelfWidth, fi
 범위Y마:= Y체 + 19
 범위HP:=범위X체a+(100-Slider체력)
 범위SP:=범위X체a+(100-Slider마력)
-return
+Return
+
 성능향상:
 msgbox, 1, 경고문, 성능향상을 사용하게되면`, cpu를 조금 더 사용하여 버벅거림을 줄일수있습니다`n`n싱글코어(저사양컴퓨터)에서 큰 효과를 보실수있습니다`n`n동의하면 예, 동의하지않으면 아니오를 누르세요
 IfMsgBox, OK
@@ -635,10 +641,12 @@ IfMsgBox, Cancel
 {
     msgbox 취소하였습니다
 }
-return
+Return
+
 설치:
 msgbox, 7/26 부터는 설치버튼이 없어졌습니다 그냥 시작하시면됩니다.
-return
+Return
+
 상황판:
 gui,2:destroy
 Gui,2: Add, Text, v가야할X x10 y10 w200 h20 , -
@@ -662,14 +670,16 @@ Gui,2: Add, Text, vGui2Text18 x10 y350 w200 h20 , -
 Gui,2: Add, Text, vGui2Text19 x10 y370 w200 h20 , -
 Gui,2: Add, Text, vGui2Text20 x10 y390 w200 h20 , -
 GUI,2:Show, w200 h200, 진행상황판
-return
+Return
 
 2Guiclose:
 gui,2:destroy
-return
+Return
+
 Pgdn::
 Pause
-return
+Return
+
 #Include, Heopung.ahk
 #Include, Move.ahk
 #Include, Map\MahanMap.ahk

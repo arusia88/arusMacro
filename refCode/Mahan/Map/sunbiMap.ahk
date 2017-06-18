@@ -7,7 +7,7 @@ FileRead, buffer, Map\sunbi.json
 t=(%buffer%)
 
 Loop {
-    gosub, 선비족좌표
+    Gosub, 선비족좌표
     Gosub, 이동
     Gosub, 랜덤이동
     if(초기화=0411){

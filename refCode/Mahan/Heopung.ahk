@@ -91,4 +91,4 @@ if(heopungSent = 1 and completedReply = 0)
 
 Gdip_Shutdown(gdipToken)
 
-return
+Return
