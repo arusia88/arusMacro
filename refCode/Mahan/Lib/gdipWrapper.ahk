@@ -4,8 +4,7 @@
 ; ,SearchDirection=1,Instances=1,LineDelim="`n",CoordDelim=",") {}
 
 
-ImageSearchWithGdip(Byref outputX,Byref outputY, fsX, fsY, feX, feY, targetImg, Variation=0, Trans="")
-{
+ImageSearchWithGdip(Byref outputX,Byref outputY, fsX, fsY, feX, feY, targetImg, Variation=0, Trans="") {
     If !pToken := Gdip_Startup()
     {
         MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
@@ -84,8 +83,7 @@ ImageSearchWithGdipMcode(Byref outputX,Byref outputY, fsX, fsY, feX, feY, target
     return (x > -1) ? 1 : 0
 }
 
-MCode(ByRef code, hex)
-{
+MCode(ByRef code, hex) {
     VarSetCapacity(code, StrLen(hex)//2)
     Loop % StrLen(hex)//2 ;%
         NumPut("0x" SubStr(hex, 2*A_Index-1, 2), code, A_Index-1, "char")

@@ -6,8 +6,9 @@
 #Include, MLib\BinRead.ahk
 #Include, MLib\Hex2Bin.ahk
 #Include, MLib\json.ahk
-#Include, convertImgToPos.ahk
-#Include, gdipWrapper.ahk
+#Include, Lib\convertImgToPos.ahk
+#Include, Lib\gdipWrapper.ahk
+
 #SingleInstance, force
 ; #NoEnv
 CoordMode,Pixel,Screen
@@ -33,17 +34,6 @@ Goto, Go
 Go:
 msgbox, 메크로 제제는 책임지지 않습니다. 자세한 사항은 블로그를 참조해주세요
 gui:
-; skill sammae jin hwa
-st = t
-; skill tal myoung
-sq = b
-; skill pokryou yubing
-sp = c
-; skill fast casting
-sk = d
-; skill mangong
-smg = u
-
 gui,destroy
 Gui, Add, GroupBox, x26 y20 w190 h110 +Center, 42억일때 할 행동(경변십억d)
 Gui, Add, Radio, x36 y40 h20 v영혼체력, 영혼사(체력)
@@ -562,6 +552,17 @@ Pgup::
 재설정:
 WinActivate, 바람의나라
 GuiControl, Enable, 시작
+; skill sammae jin hwa
+st = t
+; skill tal myoung
+sq = b
+; skill pokryou yubing
+sp = c
+; skill fast casting
+sk = d
+; skill mangong
+smg = u
+
 filenum = 0
 heopungSent = 0
 completedReply = 0
@@ -658,7 +659,7 @@ Gui,2: Add, Text, vcheckMopTime_cal x10 y110 w200 h20 , -
 Gui,2: Add, Text, vcheckMop_Timer x10 y130 w200 h20 , -
 Gui,2: Add, Text, vprevExistNoMop x10 y150 w200 h20 , -
 Gui,2: Add, Text, vresult_mopAttack x10 y170 w200 h20 , -
-Gui,2: Add, Text, vGui2Text10 x10 y190 w200 h20 , -
+Gui,2: Add, Text, vGui2Text10 x10 y190 w200 h20 , -23
 Gui,2: Add, Text, vGui2Text11 x10 y210 w200 h20 , -
 Gui,2: Add, Text, vGui2Text12 x10 y230 w200 h20 , -
 Gui,2: Add, Text, vGui2Text13 x10 y250 w200 h20 , -
@@ -680,8 +681,8 @@ Pgdn::
 Pause
 Return
 
-#Include, Heopung.ahk
-#Include, Move.ahk
+#Include, Lib\Heopung.ahk
+#Include, Lib\Move.ahk
 #Include, Map\MahanMap.ahk
 #Include, Map\MahanPrevMap.ahk
 #Include, Map\SinsuHMap.ahk

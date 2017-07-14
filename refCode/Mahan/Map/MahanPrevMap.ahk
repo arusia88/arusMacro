@@ -4,7 +4,7 @@
 Loop{
     Gosub, 위례부터대기실좌표
     Gosub, 이동
-    Gosub, 랜덤이동
+    ; Gosub, 랜덤이동
     if(초기화=0212){
         break
     }
