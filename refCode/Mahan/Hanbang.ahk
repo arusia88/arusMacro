@@ -13,6 +13,8 @@ SetControlDelay,-1
 ;interface for magic
 Class Base{
 
+    me := {x: 0, y:0}
+
     __New() {
         this.getWinPosition()
     }
@@ -29,12 +31,24 @@ Class Base{
         this.findSelfWidth := findSelfWidth
         this.findSelfHeight := findSelfHeight
     }
+
+    setMyPositionToSetScope() {
+        if (ImageSearchWithGdip(xMe, yMe, this.findSelfX, this.findSelfY, this.findSelfX+811, this.findSelfY+615, "Img\kwanmi\me.bmp", 0, 0xFFFFFF) >= 1) {
+            this.me.x := xMe
+            this.me.y := yMe
+            this.startFindX := xMe-155
+            this.startFindY := yMe-100
+            this.endFindX := xMe+130
+            this.endFindY := yMe+240
+        }
+    }
+
 }
 
 ;Class for beneficial magic
 Class Benefit extends Base {
     static _instance := 0
-    _magicNum := {mabang : "i",lifeSafe : "g", arm1: "q", arm2: "w"}
+    _magicNum := {mabang : "i",lifeSafe : "g", arm1: "q", arm2: "w", myoungsang: "z"}
 
     __New() {
         if (IsObject(this._instance)) {
@@ -52,9 +66,21 @@ Class Benefit extends Base {
 
     do() {
         ; MsgBox % "Benefit"
-        this.doMabang()
-        this.doLifeSafe()
-        this.doShield()
+        ; this.doMabang()
+        ; this.doLifeSafe()
+        ; this.doShield()
+        this.doMyoungsang()
+
+    }
+
+    doMyoungsang() {
+        ImageSearch, xMyoung, yMyoung, this.findSelfX, this.findSelfY, this.findSelfX+400, this.findSelfY+800, *80 Img\meda.bmp
+        if(ErrorLevel<>0){
+            myoungsang := this._magicNum.myoungsang
+            Sleep 300
+            ControlSend,,{Shift down}z{Shift up}%myoungsang%,ahk_class Nexon.NWind
+            Sleep 2000
+        }
     }
 
     doMabang() {
@@ -91,14 +117,18 @@ Class Benefit extends Base {
         }
     }
 
+    doSeokhwa() {
+        ControlSend, ,{Tab}{Home}{Tab}, ahk_class Nexon.NWind
+        ControlSend, ,{ShiftDown}1{ShiftUp}, ahk_class Nexon.NWind
+
+    }
+
 }
 
 ;Class for enviroment which find baram winDow coordinate
 Class Attack extends Base {
     static _instance := 0
     _magicNum := {honma : 4, attackMagic : 1}
-    _prevX := 0
-    _prevY := 0
 
     __New() {
         ; MsgBox, "@@@@@@ createInstance"
@@ -116,31 +146,37 @@ Class Attack extends Base {
         return this._instance
     }
 
-    checkAlreadyAttack(x,y) {
-        ; FileAppend, % "_prevX" this._prevX " " this._prevY " / " "_XY" x " / " y "`r", log.txt
-        if(Abs(this._prevX - x) < 50 and Abs(this._prevY - y) < 50){
-            ; FileAppend, % "same value `r", log.txt
-            return 1
+    attack(x,y,name) {
+        ; FileAppend, % name "x / y " x " / " y "`r", log.txt
+        if (y < this.me.y) {
+            direction = Up
+        } else if ( x < this.me.x){
+            direction = Left
+        } else {
+            direction = Right
         }
-        FileAppend, % "different value `r", log.txt
-        return 0
+        this.seongryo(direction)
     }
 
-    do(name, x, y) {
+    seongryo(direction) {
         honma := 4
         attackMagic := 1
-        ; FileAppend, % "honma" honma " / " attackMagic " `r", log.txt
-        ; if (this.checkAlreadyAttack(x,y) = 0) {
-        BlockInput, On
-        ControlSend,,{esc}v,ahk_class Nexon.NWind
-        Sleep, 100
-        MouseClick, Left, %x%, %y%, 1
-        Sleep, 100
-        ControlSend,,v%honma%%attackMagic%{esc},ahk_class Nexon.NWind
-        BlockInput, Off
-        ; }
-        this._prevX := x
-        this._prevY := y
+        ; casting attack magic twice need to be tested at hanbangul
+        ControlSend,, {esc}v{home}{%direction%}v%honma%%attackMagic%%attackMagic%{esc},ahk_class Nexon.NWind
+    }
+
+    do(name, resultArray) {
+        ; MsgBox, % "resultArray" resultArray.MaxIndex() " / " resultArray[1] " " resultArray[2]
+        cnt := resultArray.MaxIndex() -1
+        Loop, %cnt%
+        {
+            result := resultArray[A_Index]
+            StringSplit,Pos,result,a
+            this.attack(Pos1, Pos2, name)
+            ; this.seongryo()
+            Sleep, 100
+        }
+        return
     }
 }
 
@@ -153,27 +189,47 @@ Class Monster extends Base{
         this.mopImg := img
     }
 
-    setMyPositionToSetScope() {
-        if (ImageSearchWithGdip(xMe, yMe, this.findSelfX, this.findSelfY, this.findSelfX+811, this.findSelfY+615, "Img\kwanmi\me.bmp", 0, 0xFFFFFF) >= 1) {
-            this.startFindX := xMe-218
-            this.startFindY := yMe-113
-            this.endFindX := xMe+200
-            this.endFindY := yMe+300
+    multipleImagesearch(xs,ys,xl,yl,image) {
+        pos=
+        xss:=xs
+        yss:=ys
+
+
+        loop
+        {
+            Imagesearch,x,yi,%xss%,%yss%,%xl%,%yl%,*transFFFFFF %image%
+            If Errorlevel=1
+                Break
+            pos=%pos%%x%a%yi%`n
+            loop
+            {
+                xss:=x+30
+                If xss=%xl%
+                    Break
+                Imagesearch,x,y,%xss%,%yss%,%xl%,%yl%,*transFFFFFF %image%
+                If Errorlevel=1
+                    Break
+                pos=%pos%%x%a%y%`n
+                break
+            }
+            xss:=xs
+            yss:=yi+30
+            If yss=%yl%
+                Break
         }
+        Sort,pos,u
+        return pos
     }
+
 
     isExist() {
         this.setMyPositionToSetScope()
         if(startFindX = 0) return 0
         MsgBox, % this.startFindX "," this.startFindY "," this.endFindX "," this.endFindY "," this.mopImg
-        mopImgPath := this.mopImg
-        ImageSearch, x, y, this.startFindX, this.startFindY, this.endFindX, this.endFindY, *transFFFFFF %mopImgPath%
-        if(ErrorLevel = 0) {
-            this.x := x
-            this.y := y + 50
-            return 1
-        }
-        return 0
+        result := this.multipleImagesearch(this.startFindX, this.startFindY, this.endFindX, this.endFindY, this.mopImg)
+        this.resultArray := StrSplit(result, "`n")
+        ; MsgBox, % "this.resultArray" this.resultArray[1] " count " this.resultArray.MaxIndex()
+        return this.resultArray.MaxIndex()
     }
 
 }
@@ -192,40 +248,43 @@ Class ManageMonster {
 
     do() {
         for index, monster in this.monsterArray
-            if(monster.isExist() = 1){
-                attack.do(name, monster.x, monster.y)
+            if(monster.isExist() > 1){
+                attack.do(monster.name, monster.resultArray)
             }
     }
 }
 
 Class Context {
 
-    __New(action) {
-        this.action := action
-    }
+    contextArray := {}
 
-    setContext(action) {
+    addContext(action) {
         ; MsgBox, "here111"
-        this.action := action
+        ; this.action := action
+        this.contextArray.Insert(action)
     }
 
     doOperation() {
-        this.action.do()
+        for index, action in this.contextArray
+            action.do()
     }
 }
 ;===================== Main ===========================
 
 ; MsgBox, Start AutoHunt
 context := new Context()
-; context.setContext(Benefit.getInstance())
+context.addContext(Benefit.getInstance())
+
 manager := new ManageMonster(Attack.getInstance())
 ; manager.add(new Monster("daram", "Img\hanbang\daram.bmp"))
-; manager.add(new Monster("daram", "Img\hanbang\ruin.bmp"))
+manager.add(new Monster("ruin", "Img\hanbang\ruin.bmp"))
+manager.add(new Monster("chowon", "Img\hanbang\chowon.bmp"))
 manager.add(new Monster("magic", "Img\hanbang\magic.bmp"))
+manager.add(new Monster("magic2", "Img\hanbang\magic2.bmp"))
 manager.add(new Monster("healer" ,"Img\hanbang\healer.bmp"))
-manager.add(new Monster("knight" ,"Img\hanbang\knight.bmp"))
-manager.add(new Monster("chef" ,"Img\hanbang\chef.bmp"))
-context.setContext(manager)
+manager.add(new Monster("knight" ,"Img\hanbang\knight2.bmp"))
+manager.add(new Monster("chef" ,"Img\hanbang\chef2.bmp"))
+context.addContext(manager)
 
 Gui, Add, Text, vState x30 y30 w100 h20, -
 Gui, Show, w150 h100, currentState
@@ -238,6 +297,7 @@ update(state) {
     GuiControl, text, State, %currentState%
 }
 
+
 F2::
 Pause, Off
 update("Running")
@@ -249,6 +309,12 @@ context.doOperation()
 Return
 
 F3::
+ControlSend,,{esc},ahk_class Nexon.NWind
 update("Pause")
 Pause, On
+Return
+
+F4::
+benefit := Benefit.getInstance()
+benefit.doSeokhwa()
 Return

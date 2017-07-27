@@ -88,3 +88,41 @@ MCode(ByRef code, hex) {
     Loop % StrLen(hex)//2 ;%
         NumPut("0x" SubStr(hex, 2*A_Index-1, 2), code, A_Index-1, "char")
 }
+
+
+Gdip_CropImage(pBitmap, x, y, w, h) {
+    pBitmap2 := Gdip_CreateBitmap(w, h), G2 := Gdip_GraphicsFromImage(pBitmap2) ;gdip로 w h 크기의 비트맵을 만들고 그래픽 핸들은 g2로 한다 정도로 보시면 되겠습니다.
+    Gdip_DrawImage(G2, pBitmap, 0, 0, w, h, x, y, w, h) ;그리고 g2의 그래픽핸들에 입력받은 pbitmap을 사용해서 0,0,w,h 만큼 그리되, pbitmap의 x,y,w,h 만큼 그려라 정도라고 보시면 됩니다.
+    Gdip_DeleteGraphics(G2) ; 초기화 하는 것이구요.
+    Gdip_DisposeImage(G2)
+    return pBitmap2 ; 새롭게 그려진 pbitmap2를 반환하는 겁니다.
+}
+
+;ex>>img_src_rectangle("1.png",hwnd,vx,vy,200,200,100,100) 1.png의 이미지를 200,200 좌표를 기준으로 100,100 크기의 공간에서 검색해라 라는 의미입니다.
+img_src_rectangle(image,hwnd,byref vx, byref vy,vvx,vvy,vw,vh) {
+    pToken:=Gdip_Startup()
+    pBitmapHayStack1:=Gdip_BitmapFromhwnd(hwnd)
+    pBitmapNeedle:=Gdip_CreateBitmapFromFile(image)
+
+    pBitmapHayStack:=Gdip_CropImage(pBitmapHayStack1, vvx, vvy, vw, vh)
+
+    ;Gdip_SetBitmapToClipboard(pBitmapHayStack) ;잘 되고 있는지 클립보드로 저장하는 것이고,
+    ;Gdip_SaveBitmapToFile(pBitmapHayStack, "haystack.png") ; 마찬가지로 잘 되고 있는지 혹은 캡쳐할 때 파일로 저장하는겁니다. 이 부분만 다르므로 아래 부분은 복붙합니다.
+
+    if Gdip_ImageSearch(pBitmapHayStack,pBitmapNeedle,list,0,0,0,0,60,,1,1) {  ;그 뒤 이미지서치 함수를 통해서, 값이 나올 경우
+        StringSplit, LISTArray, LIST, `,  ; list라는 변수에 저장되는데, 출력 양식은 111,222 처럼 저장되니 이렇게 문자열을 쪼갭니다.
+        vx:=LISTArray1 ;이렇게 하면 listarray0엔 쪼갠 변수 총 갯수 그다음부터 쭉쭉 나오게 되는 것이죠.
+        vy:=LISTArray2
+        ;; 이 부분에 마우스 클릭 및 다른 기능을 추가하셔도 됩니다.
+        ;; 단, 여기서 출력된 부분은 사각형의 좌표 기준이므로 입력되는 변수 vvx와 vvy를 각각 더해야 온전한 좌표를 얻을 수 있습니다.
+        Gdip_DisposeImage(pBitmapHayStack), Gdip_DisposeImage(pBitmapNeedle) ;초기화하는 부분입니다. 그냥 넣어주시면되요.
+        Gdip_DisposeImage(pBitmapHayStack1)
+        Gdip_Shutdown(pToken)
+        return true
+    }
+    else {
+        Gdip_DisposeImage(pBitmapHayStack), Gdip_DisposeImage(pBitmapNeedle), Gdip_DisposeImage(pBitmapHayStack1)
+        Gdip_Shutdown(pToken)
+        return false
+    }
+}

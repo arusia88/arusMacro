@@ -154,7 +154,7 @@ Return
 
 isMop() {
     global
-    ImageSearch, x光, y光, findSelfX, findSelfY, findSelfX+811, findSelfY+615, Img\mob.bmp
+    ImageSearch, x光, y光, findSelfX, findSelfY, findSelfX+811, findSelfY+615, Img\mob2.bmp
     if(ErrorLevel=0){
         return 1
     } else {
