@@ -25,7 +25,7 @@ Class Base{
     }
 
     setMyPositionToSetScope() {
-        if (ImageSearchWithGdip(xMe, yMe, this.findSelfX, this.findSelfY, this.findSelfX+811, this.findSelfY+615, "Img\kwanmi\me.bmp", 0, 0xFFFFFF) >= 1) {
+        if (ImageSearchWithGdip(xMe, yMe, this.findSelfX, this.findSelfY, this.findSelfX+811, this.findSelfY+615, "Img\me.bmp", 0, 0xFFFFFF) >= 1) {
             this.me.x := xMe
             this.me.y := yMe
             this.startFindX := xMe-155

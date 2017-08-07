@@ -29,7 +29,7 @@ Class Context {
 ; MsgBox, Start AutoHunt
 context := new Context()
 manager := new ManageMonster(Attack.getInstance())
-; manager.add(new Monster("daram", "Img\hanbang\daram.bmp"))
+; manager.add(new Monster("daram", "Img\hanbang\daram_gdip.bmp"))
 manager.add(new Monster("ruin", "Img\hanbang\ruin.bmp"))
 ; manager.add(new Monster("chowon", "Img\hanbang\chowon.bmp"))
 manager.add(new Monster("magic", "Img\hanbang\magic.bmp"))
@@ -51,7 +51,7 @@ Gui, Add, Text, vState x30 y30 w100 h20, -
 Gui, Show, w150 h100, currentState
 Return
 
-;===================== GUI Run ===========================
+;===================== GUI Update ===========================
 update(state) {
     global
     currentState := state

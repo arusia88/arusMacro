@@ -1,4 +1,5 @@
 #Include, Base.ahk
+#Include, Lib\Gdip_ImageSearch.ahk
 
 Class Monster extends Base{
     startFindX := 0
@@ -44,12 +45,11 @@ Class Monster extends Base{
 
     isExist() {
         this.setMyPositionToSetScope()
-        if(startFindX = 0) return 0
-        MsgBox, % this.startFindX "," this.startFindY "," this.endFindX "," this.endFindY "," this.mopImg
-        result := this.multipleImagesearch(this.startFindX, this.startFindY, this.endFindX, this.endFindY, this.mopImg)
-        this.resultArray := StrSplit(result, "`n")
-        ; MsgBox, % "this.resultArray" this.resultArray[1] " count " this.resultArray.MaxIndex()
-        return this.resultArray.MaxIndex()
+        if(this.startFindX = 0) return 0
+        msgbox, 1111
+        outputCount := MultiImageSearchWithGdip(resultArray, this.startFindX, this.startFindY, this.endFindX, this.endFindY, this.mopImg, 0, 0xFFFFFF)
+        this.resultArray := resultArray
+        return outputCount + 0
     }
 
 }

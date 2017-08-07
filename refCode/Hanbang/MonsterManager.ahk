@@ -11,9 +11,11 @@ Class ManageMonster {
     }
 
     do() {
-        for index, monster in this.monsterArray
-            if(monster.isExist() > 1){
-                attack.do(monster.name, monster.resultArray)
+        for index, monster in this.monsterArray {
+            cnt:=monster.isExist()
+            if(cnt >= 1){
+                this.attack.do(monster, cnt)
             }
+        }
     }
 }

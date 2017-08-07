@@ -30,7 +30,14 @@ Class Attack extends Base {
         } else {
             direction = Right
         }
+        ; FileAppend, % "me x / y " this.me.x " / " this.me.y " result: " direction "`r", log.txt
         this.seongryo(direction)
+    }
+
+    revisedPosition(ByRef x, ByRef y, monster) {
+        x := x + monster.startFindX
+        y := y + monster.startFindY
+        ; MsgBox,% "revised : " x "," y "read : " monster.startFindX "," monster.startFindY
     }
 
     seongryo(direction) {
@@ -40,15 +47,18 @@ Class Attack extends Base {
         ControlSend,, {esc}v{home}{%direction%}v%honma%%attackMagic%%attackMagic%{esc},ahk_class Nexon.NWind
     }
 
-    do(name, resultArray) {
-        ; MsgBox, % "resultArray" resultArray.MaxIndex() " / " resultArray[1] " " resultArray[2]
-        cnt := resultArray.MaxIndex() -1
+    do(monster, cnt) {
+        resultArray := monster.resultArray
+        StringSplit, Item, resultArray, `n
         Loop, %cnt%
         {
-            result := resultArray[A_Index]
-            StringSplit,Pos,result,a
-            this.attack(Pos1, Pos2, name)
-            ; this.seongryo()
+            ; msgbox,% "orign result : " Item%A_Index%
+            result := Item%A_Index%
+            ; msgbox,% "split result : " result
+            StringSplit,Pos,result, `,
+            ; msgbox,% "second split result : " Pos1 " " Pos2
+            this.revisedPosition(Pos1, Pos2, monster)
+            this.attack(Pos1, Pos2, monster.name)
             Sleep, 100
         }
         return

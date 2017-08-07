@@ -24,6 +24,7 @@ Class Benefit extends Base {
             Sleep 100
             ControlSend,,{Tab}{Home}{Tab}{Shift down}z{Shift up}%magicKey%,ahk_class Nexon.NWind
             Sleep %castingTime%
+            ControlSend,, {Esc}, ahk_class Nexon.NWind
         }
     }
 }

@@ -42,6 +42,33 @@ ImageSearchWithGdip(Byref outputX,Byref outputY, fsX, fsY, feX, feY, targetImg, 
     return (outputCount > 0) ? outputCount : 0
 }
 
+
+MultiImageSearchWithGdip(ByRef OutputList, fsX, fsY, feX, feY, targetImg, Variation=0, Trans="") {
+    If !pToken := Gdip_Startup()
+    {
+        MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
+        ExitApp
+    }
+    ; Create haystack with Wind process with NWind Size
+    screenValue := fsX "|" fsY "|" 285 "|" 340
+    raster:=0x40000000 + 0x00CC0020
+    pBitmapHayStack := Gdip_BitmapFromScreen(screenValue,raster)
+    ; pBitmapHayStack := Gdip_CloneBitmapArea(pBitMapTemp, fsX, fsY, feX, feY)
+    ; Create pBitmapNeedle
+    pBitmapNeedle := Gdip_CreateBitmapFromFile(targetImg)
+
+    ; Calculate find scope
+    Width1 := Gdip_GetImageWidth(pBitmapHayStack), Height1 := Gdip_GetImageHeight(pBitmapHayStack)
+    outputCount := Gdip_ImageSearch(pBitmapHayStack,pBitmapNeedle,OutputList
+,0,0,Width1,Height1, Variation, Trans, 1, 4)
+
+    ; FileAppend, output : %OutputList% outputcount : %outputCount% targetImg : %targetImg% `r, log.txt
+    Gdip_DisposeImage(pBitmapHayStack), Gdip_DisposeImage(pBitmapNeedle)
+    Gdip_Shutdown(pToken)
+
+    return (outputCount > 0) ? outputCount : 0
+}
+
 ImageSearchWithGdipMcode(Byref outputX,Byref outputY, fsX, fsY, feX, feY, targetImg, Variation=0, Trans="") {
     If !pToken := Gdip_Startup()
     {
